@@ -4,14 +4,11 @@
 	<property name="Flex.ADL" value="${FLEX_HOME}\bin\adl.exe"/>
 	<property name="Flex.ADT" value="${FLEX_HOME}\lib\adt.jar"/>
 
-	<include file="../../../AIRKinect Extension/assets/build/build.xml" />
-
 	<!-- Editable Project Properties -->
 	<property name="AIRKinectManagerDemos.OUTPUT_NAME" value="AIRKinectManagerDemos"/>
 
 	<dirname property="AIRKinectManagerDemos.BUILD_ROOT" file="${ant.file.AIRKinect Manager Demos}"/>
 	<property name="AIRKinectManagerDemos.MODULE_ROOT" value="${AIRKinectManagerDemos.BUILD_ROOT}\..\.."/>
-	<property name="AIRKinectManagerDemos.EXTENSION_BIN" value="${AIRKinectManagerDemos.MODULE_ROOT}\..\AIRKinect Extension\bin"/>
 	<property name="AIRKinectManagerDemos.MODULE_SRC_ROOT" value="${AIRKinectManagerDemos.MODULE_ROOT}\src"/>
 	<property name="AIRKinectManagerDemos.ASSETS_ROOT" value="${AIRKinectManagerDemos.MODULE_ROOT}\assets"/>
 	<property name="AIRKinectManagerDemos.EXTERNAL_ASSETS_ROOT" value="${AIRKinectManagerDemos.ASSETS_ROOT}\external"/>
@@ -47,7 +44,7 @@
 	<available file="${AIRKinectManagerDemos.AIR_CERTIFICATE_ROOT}\${AIRKinectManagerDemos.AIR_CERTIFICATE_FILE}" type="file" property="AIRKinectManagerDemos.certificate.present"/>
 	<available file="${AIRKinectManagerDemos.EXTENSION_UNZIPPED_ROOT}\${AIRKinectManagerDemos.EXTENSION_NAME}.ane" type="dir" property="AIRKinectManagerDemos.extension.unzipped.present"/>
 
-	<target name="Clean" if="AIRKinectManagerDemos.bin.present"  depends="AIRKinect Extension.Clean">
+	<target name="Clean" if="AIRKinectManagerDemos.bin.present">
 		<delete includeemptydirs="true">
 			<fileset dir="${AIRKinectManagerDemos.BIN_ROOT}" excludes="**/${AIRKinectManagerDemos.SWF_OUTPUT}"/>
 		</delete>
@@ -75,13 +72,7 @@
 		</java>
 	</target>
 
-	<target name="Copy Latest Extension" depends="AIRKinect Extension.Build Native Extension">
-		<copy todir="${AIRKinectManagerDemos.EXTENSION_PATH}">
-			<fileset dir="${AIRKinectManagerDemos.EXTENSION_BIN}" includes="**/*.ane"/>
-		</copy>
-	</target>
-
-	<target name="Extract Native Extension" depends="Copy Latest Extension">
+	<target name="Extract Native Extension">
 		<unzip src="${AIRKinectManagerDemos.EXTENSION_PATH}\${AIRKinectManagerDemos.EXTENSION_NAME}.ane" dest="${AIRKinectManagerDemos.EXTENSION_UNZIPPED_ROOT}\${AIRKinectManagerDemos.EXTENSION_NAME}.ane"/>
 	</target>
 
