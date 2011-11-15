@@ -4,14 +4,14 @@
  * Date: 10/16/11
  * Time: 5:51 PM
  */
-package com.as3nui.airkinect.manager.demos {
-	import com.as3nui.airkinect.manager.AIRKinectManager;
-	import com.as3nui.airkinect.manager.gestures.AIRKinectGestureManager;
-	import com.as3nui.airkinect.manager.gestures.SwipeGesture;
-	import com.as3nui.airkinect.manager.regions.Region;
-	import com.as3nui.airkinect.manager.regions.RegionPlanes;
-	import com.as3nui.airkinect.manager.regions.TrackedRegion;
-	import com.as3nui.airkinect.manager.skeleton.Skeleton;
+package com.as3nui.airkinect.extended.demos {
+	import com.as3nui.airkinect.extended.manager.AIRKinectManager;
+	import com.as3nui.airkinect.extended.manager.gestures.AIRKinectGestureManager;
+	import com.as3nui.airkinect.extended.manager.gestures.SwipeGesture;
+	import com.as3nui.airkinect.extended.manager.regions.Region;
+	import com.as3nui.airkinect.extended.manager.regions.RegionPlanes;
+	import com.as3nui.airkinect.extended.manager.regions.TrackedRegion;
+	import com.as3nui.airkinect.extended.manager.skeleton.Skeleton;
 	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
 	import com.as3nui.nativeExtensions.kinect.data.SkeletonPosition;
 
@@ -23,14 +23,14 @@ package com.as3nui.airkinect.manager.demos {
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
-	public class AirKinectManagerDemos extends Sprite {
+	public class AirKinectExtendedDemos extends Sprite {
 		private var _kinectMaxDepthInFlash:uint = 200;
 		private var _skeletonsSprite:Sprite;
 		private var _trackedRegionSprite:Sprite;
 		private var _activeSkeleton:Skeleton;
 		private var _trackedRegion:TrackedRegion;
 		
-		public function AirKinectManagerDemos() {
+		public function AirKinectExtendedDemos() {
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
 		}
 

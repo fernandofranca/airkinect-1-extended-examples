@@ -1,139 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="AIRKinect Manager Demos">
+<project name="AIRKinect Extended Demos">
 	<property file="build.properties"/>
 	<property name="Flex.ADL" value="${FLEX_HOME}\bin\adl.exe"/>
 	<property name="Flex.ADT" value="${FLEX_HOME}\lib\adt.jar"/>
 
 	<!-- Editable Project Properties -->
-	<property name="AIRKinectManagerDemos.OUTPUT_NAME" value="AIRKinectManagerDemos"/>
+	<property name="AIRKinectExtendedDemos.OUTPUT_NAME" value="AIRKinectExtendedDemos"/>
 
-	<dirname property="AIRKinectManagerDemos.BUILD_ROOT" file="${ant.file.AIRKinect Manager Demos}"/>
-	<property name="AIRKinectManagerDemos.MODULE_ROOT" value="${AIRKinectManagerDemos.BUILD_ROOT}\..\.."/>
-	<property name="AIRKinectManagerDemos.MODULE_SRC_ROOT" value="${AIRKinectManagerDemos.MODULE_ROOT}\src"/>
-	<property name="AIRKinectManagerDemos.ASSETS_ROOT" value="${AIRKinectManagerDemos.MODULE_ROOT}\assets"/>
-	<property name="AIRKinectManagerDemos.EXTERNAL_ASSETS_ROOT" value="${AIRKinectManagerDemos.ASSETS_ROOT}\external"/>
-	<property name="AIRKinectManagerDemos.CONFIG_ROOT" value="${AIRKinectManagerDemos.ASSETS_ROOT}\config"/>
+	<dirname property="AIRKinectExtendedDemos.BUILD_ROOT" file="${ant.file.AIRKinect Extended Demos}"/>
+	<property name="AIRKinectExtendedDemos.MODULE_ROOT" value="${AIRKinectExtendedDemos.BUILD_ROOT}\..\.."/>
+	<property name="AIRKinectExtendedDemos.MODULE_SRC_ROOT" value="${AIRKinectExtendedDemos.MODULE_ROOT}\src"/>
+	<property name="AIRKinectExtendedDemos.ASSETS_ROOT" value="${AIRKinectExtendedDemos.MODULE_ROOT}\assets"/>
+	<property name="AIRKinectExtendedDemos.EXTERNAL_ASSETS_ROOT" value="${AIRKinectExtendedDemos.ASSETS_ROOT}\external"/>
+	<property name="AIRKinectExtendedDemos.CONFIG_ROOT" value="${AIRKinectExtendedDemos.ASSETS_ROOT}\config"/>
 
 	<!-- Filename/Output Properties -->
-	<property name="AIRKinectManagerDemos.SWF_OUTPUT" value="${AIRKinectManagerDemos.OUTPUT_NAME}.swf"/>
-	<property name="AIRKinectManagerDemos.AIR_OUTPUT" value="${AIRKinectManagerDemos.OUTPUT_NAME}.air"/>
-	<property name="AIRKinectManagerDemos.APPLICATION_DESCRIPTOR" value="${AIRKinectManagerDemos.CONFIG_ROOT}\${AIRKinectManagerDemos.OUTPUT_NAME}-app.xml"/>
-	<property name="AIRKinectManagerDemos.BIN_ROOT" location="${AIRKinectManagerDemos.MODULE_ROOT}\bin"/>
+	<property name="AIRKinectExtendedDemos.SWF_OUTPUT" value="${AIRKinectExtendedDemos.OUTPUT_NAME}.swf"/>
+	<property name="AIRKinectExtendedDemos.AIR_OUTPUT" value="${AIRKinectExtendedDemos.OUTPUT_NAME}.air"/>
+	<property name="AIRKinectExtendedDemos.APPLICATION_DESCRIPTOR" value="${AIRKinectExtendedDemos.CONFIG_ROOT}\${AIRKinectExtendedDemos.OUTPUT_NAME}-app.xml"/>
+	<property name="AIRKinectExtendedDemos.BIN_ROOT" location="${AIRKinectExtendedDemos.MODULE_ROOT}\bin"/>
 
 	<!-- Certificate Properties -->
-	<property name="AIRKinectManagerDemos.AIR_CERTIFICATE_FILE" value="debugCert.p12"/>
-	<property name="AIRKinectManagerDemos.AIR_CERTIFICATE_NAME" value="debugCert"/>
-	<property name="AIRKinectManagerDemos.AIR_CERTIFICATE_PASSWORD" value="debugPW"/>
-	<property name="AIRKinectManagerDemos.AIR_ORG_NAME" value="as3nui"/>
-	<property name="AIRKinectManagerDemos.AIR_ORG_UNIT" value="as3nui"/>
-	<property name="AIRKinectManagerDemos.AIR_COUNTRY" value="US"/>
-	<property name="AIRKinectManagerDemos.AIR_KEY_TYPE" value="2048-RSA"/>
-	<property name="AIRKinectManagerDemos.AIR_CERTIFICATE_ROOT" location="${AIRKinectManagerDemos.BIN_ROOT}\cert"/>
+	<property name="AIRKinectExtendedDemos.AIR_CERTIFICATE_FILE" value="debugCert.p12"/>
+	<property name="AIRKinectExtendedDemos.AIR_CERTIFICATE_NAME" value="debugCert"/>
+	<property name="AIRKinectExtendedDemos.AIR_CERTIFICATE_PASSWORD" value="debugPW"/>
+	<property name="AIRKinectExtendedDemos.AIR_ORG_NAME" value="as3nui"/>
+	<property name="AIRKinectExtendedDemos.AIR_ORG_UNIT" value="as3nui"/>
+	<property name="AIRKinectExtendedDemos.AIR_COUNTRY" value="US"/>
+	<property name="AIRKinectExtendedDemos.AIR_KEY_TYPE" value="2048-RSA"/>
+	<property name="AIRKinectExtendedDemos.AIR_CERTIFICATE_ROOT" location="${AIRKinectExtendedDemos.BIN_ROOT}\cert"/>
 
 	<!-- Native Extension -->
-	<property name="AIRKinectManagerDemos.EXTENSION_NAME" value="AIRKinectExtension"/>
-	<property name="AIRKinectManagerDemos.EXTENSION_PATH" value="${AIRKinectManagerDemos.ASSETS_ROOT}\extension"/>
-	<property name="AIRKinectManagerDemos.EXTENSION_UNZIPPED_ROOT" value="${AIRKinectManagerDemos.BIN_ROOT}\unzipped"/>
+	<property name="AIRKinectExtendedDemos.EXTENSION_NAME" value="AIRKinectExtension"/>
+	<property name="AIRKinectExtendedDemos.EXTENSION_PATH" value="${AIRKinectExtendedDemos.ASSETS_ROOT}\extension"/>
+	<property name="AIRKinectExtendedDemos.EXTENSION_UNZIPPED_ROOT" value="${AIRKinectExtendedDemos.BIN_ROOT}\unzipped"/>
 
 	<!-- Packaging Properties -->
-	<property name="AIRKinectManagerDemos.PACKAGE_TMP_ROOT" value="${AIRKinectManagerDemos.BIN_ROOT}\tmp"/>
-	<property name="AIRKinectManagerDemos.PACKAGE_ROOT" location="${AIRKinectManagerDemos.BIN_ROOT}\release"/>
+	<property name="AIRKinectExtendedDemos.PACKAGE_TMP_ROOT" value="${AIRKinectExtendedDemos.BIN_ROOT}\tmp"/>
+	<property name="AIRKinectExtendedDemos.PACKAGE_ROOT" location="${AIRKinectExtendedDemos.BIN_ROOT}\release"/>
 
 	<!-- Existing File checks -->
-	<available file="${AIRKinectManagerDemos.BIN_ROOT}" type="dir" property="AIRKinectManagerDemos.bin.present"/>
-	<available file="${AIRKinectManagerDemos.AIR_CERTIFICATE_ROOT}\${AIRKinectManagerDemos.AIR_CERTIFICATE_FILE}" type="file" property="AIRKinectManagerDemos.certificate.present"/>
-	<available file="${AIRKinectManagerDemos.EXTENSION_UNZIPPED_ROOT}\${AIRKinectManagerDemos.EXTENSION_NAME}.ane" type="dir" property="AIRKinectManagerDemos.extension.unzipped.present"/>
+	<available file="${AIRKinectExtendedDemos.BIN_ROOT}" type="dir" property="AIRKinectExtendedDemos.bin.present"/>
+	<available file="${AIRKinectExtendedDemos.AIR_CERTIFICATE_ROOT}\${AIRKinectExtendedDemos.AIR_CERTIFICATE_FILE}" type="file" property="AIRKinectExtendedDemos.certificate.present"/>
+	<available file="${AIRKinectExtendedDemos.EXTENSION_UNZIPPED_ROOT}\${AIRKinectExtendedDemos.EXTENSION_NAME}.ane" type="dir" property="AIRKinectExtendedDemos.extension.unzipped.present"/>
 
-	<target name="Clean" if="AIRKinectManagerDemos.bin.present">
+	<target name="Clean" if="AIRKinectExtendedDemos.bin.present">
 		<delete includeemptydirs="true">
-			<fileset dir="${AIRKinectManagerDemos.BIN_ROOT}" excludes="**/${AIRKinectManagerDemos.SWF_OUTPUT}"/>
+			<fileset dir="${AIRKinectExtendedDemos.BIN_ROOT}" excludes="**/${AIRKinectExtendedDemos.SWF_OUTPUT}"/>
 		</delete>
 	</target>
 
-	<target name="Create BIN" unless="AIRKinectManagerDemos.bin.present">
-		<mkdir dir="${AIRKinectManagerDemos.BIN_ROOT}"/>
+	<target name="Create BIN" unless="AIRKinectExtendedDemos.bin.present">
+		<mkdir dir="${AIRKinectExtendedDemos.BIN_ROOT}"/>
 	</target>
 
-	<target name="Generate Certificate" unless="AIRKinectManagerDemos.certificate.present">
-		<mkdir dir="${AIRKinectManagerDemos.AIR_CERTIFICATE_ROOT}"/>
+	<target name="Generate Certificate" unless="AIRKinectExtendedDemos.certificate.present">
+		<mkdir dir="${AIRKinectExtendedDemos.AIR_CERTIFICATE_ROOT}"/>
 		<java jar="${Flex.ADT}" fork="true">
 			<arg value="-certificate"/>
 			<arg value="-cn"/>
-			<arg value="${AIRKinectManagerDemos.AIR_CERTIFICATE_NAME}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_CERTIFICATE_NAME}"/>
 			<arg value="-ou"/>
-			<arg value="${AIRKinectManagerDemos.AIR_ORG_UNIT}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_ORG_UNIT}"/>
 			<arg value="-o"/>
-			<arg value="${AIRKinectManagerDemos.AIR_ORG_NAME}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_ORG_NAME}"/>
 			<arg value="-c"/>
-			<arg value="${AIRKinectManagerDemos.AIR_COUNTRY}"/>
-			<arg value="${AIRKinectManagerDemos.AIR_KEY_TYPE}"/>
-			<arg value="${AIRKinectManagerDemos.AIR_CERTIFICATE_ROOT}\${AIRKinectManagerDemos.AIR_CERTIFICATE_FILE}"/>
-			<arg value="${AIRKinectManagerDemos.AIR_CERTIFICATE_PASSWORD}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_COUNTRY}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_KEY_TYPE}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_CERTIFICATE_ROOT}\${AIRKinectExtendedDemos.AIR_CERTIFICATE_FILE}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_CERTIFICATE_PASSWORD}"/>
 		</java>
 	</target>
 
 	<target name="Extract Native Extension">
-		<unzip src="${AIRKinectManagerDemos.EXTENSION_PATH}\${AIRKinectManagerDemos.EXTENSION_NAME}.ane" dest="${AIRKinectManagerDemos.EXTENSION_UNZIPPED_ROOT}\${AIRKinectManagerDemos.EXTENSION_NAME}.ane"/>
+		<unzip src="${AIRKinectExtendedDemos.EXTENSION_PATH}\${AIRKinectExtendedDemos.EXTENSION_NAME}.ane" dest="${AIRKinectExtendedDemos.EXTENSION_UNZIPPED_ROOT}\${AIRKinectExtendedDemos.EXTENSION_NAME}.ane"/>
 	</target>
 
 	<target name="Debug Launch" depends="Extract Native Extension">
 		<exec executable="${Flex.ADL}" spawn="true">
-			<arg value="${AIRKinectManagerDemos.APPLICATION_DESCRIPTOR}"/>
+			<arg value="${AIRKinectExtendedDemos.APPLICATION_DESCRIPTOR}"/>
 			<arg value="-extdir"/>
-			<arg value="${AIRKinectManagerDemos.EXTENSION_UNZIPPED_ROOT}"/>
-			<arg value="${AIRKinectManagerDemos.BIN_ROOT}"/>
+			<arg value="${AIRKinectExtendedDemos.EXTENSION_UNZIPPED_ROOT}"/>
+			<arg value="${AIRKinectExtendedDemos.BIN_ROOT}"/>
 		</exec>
 	</target>
 
 	<target name="No Debug Launch" depends="Extract Native Extension">
 		<exec executable="${Flex.ADL}" spawn="true">
-			<arg value="${AIRKinectManagerDemos.APPLICATION_DESCRIPTOR}"/>
+			<arg value="${AIRKinectExtendedDemos.APPLICATION_DESCRIPTOR}"/>
 			<arg value="-nodebug"/>
 			<arg value="-extdir"/>
-			<arg value="${AIRKinectManagerDemos.EXTENSION_UNZIPPED_ROOT}"/>
-			<arg value="${AIRKinectManagerDemos.BIN_ROOT}"/>
+			<arg value="${AIRKinectExtendedDemos.EXTENSION_UNZIPPED_ROOT}"/>
+			<arg value="${AIRKinectExtendedDemos.BIN_ROOT}"/>
 		</exec>
 	</target>
 
 	<target name="Package Native Application" depends="Generate Certificate">
 		<!-- dll files -->
-		<mkdir dir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}"/>
-		<mkdir dir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}\extension"/>
+		<mkdir dir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}"/>
+		<mkdir dir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}\extension"/>
 		<!-- flatten directory -->
-		<copy todir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}\extension" flatten="true">
-			<fileset dir="${AIRKinectManagerDemos.EXTENSION_PATH}"/>
+		<copy todir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}\extension" flatten="true">
+			<fileset dir="${AIRKinectExtendedDemos.EXTENSION_PATH}"/>
 		</copy>
 
-		<mkdir dir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}\assets"/>
-		<copy todir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}\assets">
-			<fileset dir="${AIRKinectManagerDemos.EXTERNAL_ASSETS_ROOT}"/>
+		<mkdir dir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}\assets"/>
+		<copy todir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}\assets">
+			<fileset dir="${AIRKinectExtendedDemos.EXTERNAL_ASSETS_ROOT}"/>
 		</copy>
 
-		<copy todir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}" file="${AIRKinectManagerDemos.BIN_ROOT}\${AIRKinectManagerDemos.SWF_OUTPUT}"/>
-		<copy todir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}" file="${AIRKinectManagerDemos.APPLICATION_DESCRIPTOR}"/>
-		<copy todir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}" file="${AIRKinectManagerDemos.AIR_CERTIFICATE_ROOT}\${AIRKinectManagerDemos.AIR_CERTIFICATE_FILE}"/>
+		<copy todir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}" file="${AIRKinectExtendedDemos.BIN_ROOT}\${AIRKinectExtendedDemos.SWF_OUTPUT}"/>
+		<copy todir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}" file="${AIRKinectExtendedDemos.APPLICATION_DESCRIPTOR}"/>
+		<copy todir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}" file="${AIRKinectExtendedDemos.AIR_CERTIFICATE_ROOT}\${AIRKinectExtendedDemos.AIR_CERTIFICATE_FILE}"/>
 
-		<java jar="${Flex.ADT}" fork="true" dir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}" failonerror="true">
+		<java jar="${Flex.ADT}" fork="true" dir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}" failonerror="true">
 			<arg value="-package"/>
 			<arg value="-XnoAneValidate"/>
 			<arg value="-storetype"/>
 			<arg value="pkcs12"/>
 			<arg value="-keystore"/>
-			<arg value="${AIRKinectManagerDemos.AIR_CERTIFICATE_FILE}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_CERTIFICATE_FILE}"/>
 			<arg value="-storepass"/>
-			<arg value="${AIRKinectManagerDemos.AIR_CERTIFICATE_PASSWORD}"/>
+			<arg value="${AIRKinectExtendedDemos.AIR_CERTIFICATE_PASSWORD}"/>
 			<arg value="-target"/>
 			<arg value="native"/>
-			<arg value="${AIRKinectManagerDemos.OUTPUT_NAME}"/>
-			<arg value="${AIRKinectManagerDemos.APPLICATION_DESCRIPTOR}"/>
-			<arg value="${AIRKinectManagerDemos.SWF_OUTPUT}"/>
+			<arg value="${AIRKinectExtendedDemos.OUTPUT_NAME}"/>
+			<arg value="${AIRKinectExtendedDemos.APPLICATION_DESCRIPTOR}"/>
+			<arg value="${AIRKinectExtendedDemos.SWF_OUTPUT}"/>
 			<arg value="assets"/>
 			<arg value="-extdir"/>
 			<arg value="./extension"/>
 		</java>
-		<mkdir dir="${AIRKinectManagerDemos.PACKAGE_ROOT}"/>
-		<move todir="${AIRKinectManagerDemos.PACKAGE_ROOT}" file="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}\${AIRKinectManagerDemos.OUTPUT_NAME}.exe"/>
-		<delete dir="${AIRKinectManagerDemos.PACKAGE_TMP_ROOT}"/>
-		<delete dir="${AIRKinectManagerDemos.AIR_CERTIFICATE_ROOT}"/>
+		<mkdir dir="${AIRKinectExtendedDemos.PACKAGE_ROOT}"/>
+		<move todir="${AIRKinectExtendedDemos.PACKAGE_ROOT}" file="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}\${AIRKinectExtendedDemos.OUTPUT_NAME}.exe"/>
+		<delete dir="${AIRKinectExtendedDemos.PACKAGE_TMP_ROOT}"/>
+		<delete dir="${AIRKinectExtendedDemos.AIR_CERTIFICATE_ROOT}"/>
 	</target>
 </project>

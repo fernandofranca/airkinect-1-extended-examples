@@ -15,14 +15,14 @@
 
 	<!-- A universally unique application identifier. Must be unique across all AIR applications.
 	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-	<id>com.as3nui.airkinect.manager.demos.AirKinectManagerDemos</id>
+	<id>com.as3nui.airkinect.manager.demos.AirKinectExtendedDemos</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>AirKinectManagerDemos</filename>
+	<filename>AirKinectExtendedDemos</filename>
 
 	<!-- The name that is displayed in the AIR application installer. 
 	May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<name>AirKinectManagerDemos</name>
+	<name>AirKinectExtendedDemos</name>
 	
 	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
 	Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
@@ -45,10 +45,10 @@
 	<!-- Settings for the application's initial window. Required. -->
 	<initialWindow>
 		<!-- The main SWF or HTML file of the application. Required. -->
-		<content>AIRKinectManagerDemos.swf</content>
+		<content>AIRKinectExtendedDemos.swf</content>
 		
 		<!-- The title of the main window. Optional. -->
-		<title>AirKinectManagerDemos</title>
+		<title>AirKinectExtendedDemos</title>
 
 		<!-- The type of system chrome to use (either "standard" or "none"). Optional. Default standard. -->
 		<!-- <systemChrome></systemChrome> -->
