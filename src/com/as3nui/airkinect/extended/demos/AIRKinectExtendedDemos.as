@@ -45,7 +45,7 @@ package com.as3nui.airkinect.extended.demos {
 //			this.addChild(new UICrankHandleDemo());
 //			this.addChild(new UITargetDemo());
 //			this.addChild(new UIHotSpotDemo());
-			this.addChild(new UIRepeatHandleDemo());
+//			this.addChild(new UIRepeatHandleDemo());
 		}
 	}
 }

@@ -70,8 +70,8 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 			_crankHandle.addEventListener(UIEvent.CAPTURE, onCrankCapture);
 			_crankHandle.addEventListener(UIEvent.MOVE, onCrankMove);
-			_crankHandle.showCaptureArea();
-			_crankHandle.drawDebug = true;
+			//_crankHandle.showCaptureArea();
+//			_crankHandle.drawDebug = true;
 		}
 
 		private function onCrankCapture(event:UIEvent):void {

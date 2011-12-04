@@ -162,8 +162,8 @@ package com.as3nui.airkinect.extended.demos.manager {
 					_historySprite.graphics.drawCircle(element.x,  element.y,  timeRatio * 15);
 
 					//Maps 3d Position into 2d Space
-					//var convertedPosition:Point = _skeletonsSprite.local3DToGlobal(new Vector3D(element.x,  element.y,  element.z));
-					//_historySprite.graphics.drawCircle(convertedPosition.x,  convertedPosition.y,  timeRatio * 15);
+//					var convertedPosition:Point = _skeletonsSprite.local3DToGlobal(new Vector3D(element.x,  element.y,  element.z));
+//					_historySprite.graphics.drawCircle(convertedPosition.x,  convertedPosition.y,  timeRatio * 15);
 				}
 			}
 		}
