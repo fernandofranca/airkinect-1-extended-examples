@@ -25,6 +25,10 @@ package com.as3nui.airkinect.extended.demos.ui.display {
 			selectedCircle.graphics.beginFill(0x0000ff);
 			selectedCircle.graphics.drawCircle(_radius,_radius,_radius);
 
+			var disabledIcon:Shape = new Shape();
+			disabledIcon.graphics.beginFill(0xeeeeee);
+			disabledIcon.graphics.drawCircle(_radius,_radius,_radius);
+
 			var track:Shape = new Shape();
 			track.graphics.beginFill(0x0000ff, .5);
 
@@ -43,7 +47,7 @@ package com.as3nui.airkinect.extended.demos.ui.display {
 					break;
 
 			}
-			super(circle, track, null, direction);
+			super(circle, track, null, disabledIcon, direction);
 		}
 	}
 }

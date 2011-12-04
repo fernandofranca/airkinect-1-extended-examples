@@ -26,7 +26,7 @@ package com.as3nui.airkinect.extended.demos.ui.display {
 			rectangle.graphics.drawRect(0,0,100,100);
 
 			var simpleSelectionTimer:SimpleSelectionTimer = new SimpleSelectionTimer(0x0000ff);
-			super(rectangle,  simpleSelectionTimer, 4);
+			super(rectangle,  simpleSelectionTimer, null, 4);
 
 			_frontIcon = new Sprite();
 			_frontIcon.graphics.beginFill(0xff0000);

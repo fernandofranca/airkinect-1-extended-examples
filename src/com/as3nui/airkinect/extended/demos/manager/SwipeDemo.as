@@ -24,53 +24,22 @@ package com.as3nui.airkinect.extended.demos.manager {
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
-	import flash.media.Sound;
-	import flash.media.SoundChannel;
-	import flash.utils.Dictionary;
 
-	public class AirKinectManagerDemo extends Sprite {
+	public class SwipeDemo extends Sprite {
 		private var _kinectMaxDepthInFlash:uint = 200;
 		private var _skeletonsSprite:Sprite;
 		private var _regionsSprite:Sprite;
 		private var _activeSkeleton:Skeleton;
-
-		private var _touchRegions:Vector.<Region>;
 		private var _trackedRegion:TrackedRegion;
-		private var _touchedRegions:Vector.<Region>;
-
-		[Embed (source = "/../assets/embeded/sounds/bass2.Gminor.90.mp3")]
-		private var BassSound:Class;
-
-		[Embed (source = "/../assets/embeded/sounds/balladHihatopen.90.mp3")]
-		private var DrumSound:Class;
-
-		[Embed (source = "/../assets/embeded/sounds/funk_guitar_A7_90.mp3")]
-		private var GuitarSound:Class;
-
-		[Embed (source = "/../assets/embeded/sounds/wurlitzer_ambient_92.mp3")]
-		private var KeyboardSound:Class;
-
-		private var _bass:Sound;
-		private var _drums:Sound;
-		private var _guitar:Sound;
-		private var _keyboard:Sound;
-		private var _soundChannels:Dictionary;
 		private var _rgbCamera:Bitmap;
 
 		
-		public function AirKinectManagerDemo() {
+		public function SwipeDemo() {
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
 		}
 
 		private function onAddedToStage(event:Event):void {
 			initDemo();
-
-			_soundChannels = new Dictionary(true);
-			_bass = new BassSound() as Sound;
-			_drums = new DrumSound() as Sound;
-			_guitar = new GuitarSound() as Sound;
-			_keyboard = new KeyboardSound() as Sound;
-
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 
@@ -86,16 +55,12 @@ package com.as3nui.airkinect.extended.demos.manager {
 			_skeletonsSprite = new Sprite();
 			this.addChild(_skeletonsSprite);
 
-			_touchRegions = new <Region>[];
-			_touchedRegions = new <Region>[];
-
 			_regionsSprite = new Sprite();
 			this.addChild(_regionsSprite);
 
 			NativeApplication.nativeApplication.addEventListener(Event.EXITING, onExiting);
 			initKinect();
 			initRGBCamera();
-//			initRegions();
 		}
 
 		private function initRGBCamera():void {
@@ -109,19 +74,6 @@ package com.as3nui.airkinect.extended.demos.manager {
 
 		private function onRGBFrame(bmpData:BitmapData):void {
 			_rgbCamera.bitmapData = bmpData;
-		}
-
-		private function initRegions():void {
-			var frontTopLeft:Region = new Region(.3,.3,.4,.4,1, 2, "ftl");
-			var frontBottomLeft:Region = new Region(.3,.6,.4,.7,1, 2, "fbl");
-
-			var frontTopRight:Region = new Region(.6,.3,.7,.4,1, 2, "ftr");
-			var frontBottomRight:Region = new Region(.6,.6,.7,.7,1, 2, "fbr");
-
-			_touchRegions.push(frontTopLeft);
-			_touchRegions.push(frontBottomLeft);
-			_touchRegions.push(frontBottomRight);
-			_touchRegions.push(frontTopRight);
 		}
 
 		private function initKinect():void {
@@ -169,11 +121,11 @@ package com.as3nui.airkinect.extended.demos.manager {
 		private function setActive(skeleton:Skeleton):void {
 			_activeSkeleton = skeleton;
 
-/*
-			var leftSwipeGesture:SwipeGesture = new SwipeGesture(skeleton, SkeletonPosition.HAND_LEFT, null, true, false, false);
-			leftSwipeGesture.onGestureComplete.add(onSwipeComplete);
-*/
+			//Swipe with no Region Restrictions
+			//var leftSwipeGesture:SwipeGesture = new SwipeGesture(skeleton, SkeletonPosition.HAND_LEFT, null, true, false, false);
+			//leftSwipeGesture.onGestureComplete.add(onSwipeComplete);
 
+			//Swipe with Region Restrictions
 			_trackedRegion = new TrackedRegion(_activeSkeleton, SkeletonPosition.SHOULDER_CENTER, -.1, -1, .1, 1, -4, 0);
 			var leftSwipeGesture:SwipeGesture = new SwipeGesture(skeleton, SkeletonPosition.HAND_LEFT, new <Region>[_trackedRegion], true, false, false);
 			leftSwipeGesture.onGestureComplete.add(onSwipeComplete);
@@ -213,9 +165,6 @@ package com.as3nui.airkinect.extended.demos.manager {
 		private function drawRegions():void {
 			_regionsSprite.graphics.clear();
 			drawTrackedRegion();
-			for each(var region:Region in _touchRegions){
-				drawRegion(region);
-			}
 		}
 		
 		private function drawTrackedRegion():void {
@@ -227,62 +176,15 @@ package com.as3nui.airkinect.extended.demos.manager {
 			var scaledRegion:Region = region.scale(stage.stageWidth, stage.stageHeight, _kinectMaxDepthInFlash);
 			var kinectRegionPlanes:RegionPlanes = scaledRegion.local3DToGlobal(this);
 
-			var alpha:Number = .5;
+			var alpha:Number = .35;
 			if(_activeSkeleton){
 				var leftHand:Vector3D = _activeSkeleton.getElement(SkeletonPosition.HAND_LEFT);
 				var rightHand:Vector3D = _activeSkeleton.getElement(SkeletonPosition.HAND_RIGHT);
-				if(region.contains3D(leftHand) || region.contains3D(rightHand)){
-					alpha = 1;
-					if(_touchedRegions.indexOf(region) == -1){
-						_touchedRegions.push(region);
-						onTouched(region);
-					}
-				}else{
-					if(_touchedRegions.indexOf(region) != -1){
-						onReleased(region);
-						_touchedRegions.splice(_touchedRegions.indexOf(region), 1);
-					}
-				}
-			}
-
-			_regionsSprite.graphics.beginFill(0x00ff00, alpha);
-			_regionsSprite.graphics.drawRect(kinectRegionPlanes.front.x, kinectRegionPlanes.front.y, kinectRegionPlanes.front.width, kinectRegionPlanes.front.height);
-			_regionsSprite.graphics.beginFill(0x0000ff, alpha);
-			_regionsSprite.graphics.drawRect(kinectRegionPlanes.back.x, kinectRegionPlanes.back.y, kinectRegionPlanes.back.width, kinectRegionPlanes.back.height);
-		}
-
-		private function onTouched(region:Region):void {
-			switch(region.id){
-				case "ftl":
-					_soundChannels[_drums]  = _drums.play(0, 999);
-					break;
-				case "ftr":
-					_soundChannels[_guitar] = _guitar.play(0,999);
-					break;
-				case "fbl":
-					_soundChannels[_bass] = _bass.play(0,999);
-					break;
-				case "fbr":
-					_soundChannels[_keyboard] = _keyboard.play(0,999);
-					break;
-			}
-			trace("Touched region :: " + region.id);
-		}
-		private function onReleased(region:Region):void {
-			trace("Released region :: " + region.id);
-			switch(region.id){
-				case "ftl":
-					if(_soundChannels[_drums]) (_soundChannels[_drums] as SoundChannel).stop();
-					break;
-				case "ftr":
-					if(_soundChannels[_guitar]) (_soundChannels[_guitar] as SoundChannel).stop();
-					break;
-				case "fbl":
-					if(_soundChannels[_bass]) (_soundChannels[_bass] as SoundChannel).stop();
-					break;
-				case "fbr":
-					if(_soundChannels[_keyboard]) (_soundChannels[_keyboard] as SoundChannel).stop();
-					break;
+				if(region.contains3D(leftHand) || region.contains3D(rightHand)) alpha = .75;
+				_regionsSprite.graphics.beginFill(0x0000ff, alpha);
+				_regionsSprite.graphics.drawRect(kinectRegionPlanes.back.x, kinectRegionPlanes.back.y, kinectRegionPlanes.back.width, kinectRegionPlanes.back.height);
+				_regionsSprite.graphics.beginFill(0x00ff00, alpha);
+				_regionsSprite.graphics.drawRect(kinectRegionPlanes.front.x, kinectRegionPlanes.front.y, kinectRegionPlanes.front.width, kinectRegionPlanes.front.height);
 			}
 		}
 

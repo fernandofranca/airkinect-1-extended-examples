@@ -1,9 +1,3 @@
-/**
- *
- * User: rgerbasi
- * Date: 10/16/11
- * Time: 5:51 PM
- */
 package com.as3nui.airkinect.extended.demos.ui {
 	import com.as3nui.airkinect.extended.demos.ui.display.ColoredCrankHandle;
 	import com.as3nui.airkinect.extended.demos.ui.display.ColoredHandle;
@@ -16,89 +10,62 @@ package com.as3nui.airkinect.extended.demos.ui {
 	import com.as3nui.airkinect.extended.ui.managers.UIManager;
 	import com.as3nui.airkinect.extended.ui.objects.Cursor;
 	import com.as3nui.nativeExtensions.kinect.AIRKinect;
-	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
 	import com.as3nui.nativeExtensions.kinect.data.SkeletonPosition;
-	import com.as3nui.nativeExtensions.kinect.events.CameraFrameEvent;
 	import com.as3nui.nativeExtensions.kinect.events.SkeletonFrameEvent;
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
-	import flash.events.Event;
-	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	import flash.text.TextField;
 
-	public class AirKinectUIDemo extends Sprite {
-		private var _mouseSimulator:MouseSimulator;
+	public class UISandboxDemo extends BaseUIDemo {
+
 		private var _container:Sprite;
+		private var _mouseSimulator:MouseSimulator;
 		private var _leftHandCursor:Cursor;
 
-		private var _rgbCamera:Bitmap;
 		private var _info:TextField;
 		private var _slideOutput:TextField;
 
-		public function AirKinectUIDemo() {
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
-		}
-
-		private function onAddedToStage(event:Event):void {
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-
-			AIRKinect.initialize(AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_SKELETON | AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_COLOR);
-			
+		public function UISandboxDemo() {
 			_container = new Sprite();
 			this.addChild(_container);
 
-			initDemo();
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-
-			stage.addEventListener(Event.RESIZE, onStageResize);
-		}
-
-		private function onStageResize(event:Event):void {
-			root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
-
-			_container.x = (stage.stageWidth - _container.width)/2;
-			_rgbCamera.y =  stage.stageHeight - _rgbCamera.height;
 		}
 		
-		private function initDemo():void {
+		override protected function initDemo():void {
 			UIManager.init(stage);
-
-			_info = new TextField();
-			this.addChild(_info);
-
-			var circle:Shape = new Shape();
-			circle.graphics.lineStyle(2,0x000000);
-			circle.graphics.beginFill(0x00ff00);
-			circle.graphics.drawCircle(0,0,20);
-
-			_leftHandCursor = new Cursor("_kinect_", SkeletonPosition.HAND_LEFT, circle);
-			UIManager.addCursor(_leftHandCursor);
-
 			_mouseSimulator = new MouseSimulator(stage);
 
-			var handle:Handle;
-			var spacing:uint = 100;
-			var totalHandles:int = 10;
 
-			for (var i:uint = 0;i<totalHandles;i++){
-				handle = new ColoredHandle(Math.random()*0xffffff, totalHandles + Math.round(Math.random() * 30));
-				handle.x = i * spacing;
-				handle.y = 100;
-				
-				_container.addChild(handle);
-				handle.addEventListener(UIEvent.SELECTED, onHandleSelected);
+			createCursor();
+			createHandles();
+			createSlideHandles();
+			createTargets();
+			createCrankHandles();
 
-				handle.showCaptureArea();
-			}
+			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+		}
 
+		private function createCrankHandles():void {
+			var crankHandle:ColoredCrankHandle = new ColoredCrankHandle();
+			crankHandle.x = 300;
+			crankHandle.y = 300;
+			this.addChild(crankHandle);
+
+			crankHandle.addEventListener(UIEvent.MOVE, onCrankMove);
+			crankHandle.showCaptureArea();
+			crankHandle.drawDebug = true;
+		}
+
+		private function createTargets():void {
+			var target:ColoredTarget = new ColoredTarget();
+			target.x = 10;
+			target.y = 300;
+			this.addChild(target);
+		}
+
+		private function createSlideHandles():void {
 			var leftSlideHandle:ColoredSlideHandle = new ColoredSlideHandle(0x00ff00, 30, SlideHandle.LEFT);
 			leftSlideHandle.x = 600;
 			leftSlideHandle.y = 300;
@@ -113,34 +80,41 @@ package com.as3nui.airkinect.extended.demos.ui {
 			this.addChild(rightSlideHandle);
 //			rightSlideHandle.showCaptureArea();
 
-			var target:ColoredTarget = new ColoredTarget();
-			target.x = 10;
-			target.y = 300;
-			this.addChild(target);
-
 			_slideOutput = new TextField();
 			_slideOutput.text = "Slide to change";
 			_slideOutput.x = 600;
 			_slideOutput.y = 400;
 			this.addChild(_slideOutput);
 
+		}
 
-			var crankHandle:ColoredCrankHandle = new ColoredCrankHandle();
-			crankHandle.x = 300;
-			crankHandle.y = 300;
-			this.addChild(crankHandle);
-			
-			crankHandle.addEventListener(UIEvent.MOVE, onCrankMove);
-			crankHandle.showCaptureArea();
-			crankHandle.drawDebug = true;
+		private function createHandles():void {
+			_info = new TextField();
+			this.addChild(_info);
 
-			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
-			AIRKinect.addEventListener(CameraFrameEvent.RGB, onRGBFrame);
+			var handle:Handle;
+			var spacing:uint = 100;
+			var totalHandles:int = 10;
 
-			_rgbCamera =new Bitmap(new BitmapData(640, 480));
-			_rgbCamera.scaleX = _rgbCamera.scaleY = .25;
-			this.addChild(_rgbCamera);
-			_rgbCamera.y =  stage.stageHeight - _rgbCamera.height;
+			for (var i:uint = 0; i < totalHandles; i++) {
+				handle = new ColoredHandle(Math.random() * 0xffffff, totalHandles + Math.round(Math.random() * 30));
+				handle.x = 50+ (i * spacing);
+				handle.y = 100;
+
+				_container.addChild(handle);
+				handle.addEventListener(UIEvent.SELECTED, onHandleSelected);
+				//handle.showCaptureArea();
+			}
+		}
+
+		private function createCursor():void {
+			var circle:Shape = new Shape();
+			circle.graphics.lineStyle(2, 0x000000);
+			circle.graphics.beginFill(0x00ff00);
+			circle.graphics.drawCircle(0, 0, 20);
+
+			_leftHandCursor = new Cursor("_kinect_", SkeletonPosition.HAND_LEFT, circle);
+			UIManager.addCursor(_leftHandCursor);
 		}
 
 		private function onCrankMove(event:UIEvent):void {
@@ -181,10 +155,6 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 		private function onHandleSelected(event:UIEvent):void {
 			_info.text = event.currentTarget.name + " Selected";
-		}
-
-		private function onRGBFrame(event:CameraFrameEvent):void {
-			_rgbCamera.bitmapData = event.frame;
 		}
 	}
 }
