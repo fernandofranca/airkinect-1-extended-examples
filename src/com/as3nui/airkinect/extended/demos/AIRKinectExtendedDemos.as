@@ -5,10 +5,11 @@
  * Time: 1:17 PM
  */
 package com.as3nui.airkinect.extended.demos {
-	import com.as3nui.airkinect.extended.demos.manager.HistoryDemo;
+	import com.as3nui.airkinect.extended.demos.recorder.HistoryRecordedDemo;
 	import com.as3nui.airkinect.extended.demos.manager.ManagerDemo;
 	import com.as3nui.airkinect.extended.demos.manager.RegionsDemo;
 	import com.as3nui.airkinect.extended.demos.manager.SwipeDemo;
+	import com.as3nui.airkinect.extended.demos.recorder.RecorderDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UICrankHandleDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UIHandleDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UIHotSpotDemo;
@@ -46,6 +47,12 @@ package com.as3nui.airkinect.extended.demos {
 //			this.addChild(new UITargetDemo());
 //			this.addChild(new UIHotSpotDemo());
 //			this.addChild(new UIRepeatHandleDemo());
+
+
+			this.addChild(new RecorderDemo());
+//			this.addChild(new HistoryRecordedDemo());
+
+
 		}
 	}
 }

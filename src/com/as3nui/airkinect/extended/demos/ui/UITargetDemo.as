@@ -14,7 +14,6 @@ package com.as3nui.airkinect.extended.demos.ui {
 	import flash.geom.Vector3D;
 
 	public class UITargetDemo extends BaseUIDemo {
-		private var _mouseSimulator:MouseSimulator;
 		private var _leftHandCursor:Cursor;
 		private var _target:Target;
 
@@ -24,7 +23,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 		
 		override protected function initDemo():void {
 			UIManager.init(stage);
-			_mouseSimulator = new MouseSimulator(stage);
+			MouseSimulator.init(stage);
 
 			createCursor();
 			createTarget();

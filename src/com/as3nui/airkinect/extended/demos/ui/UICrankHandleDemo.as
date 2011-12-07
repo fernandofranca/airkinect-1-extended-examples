@@ -17,7 +17,6 @@ package com.as3nui.airkinect.extended.demos.ui {
 	import flash.net.URLRequest;
 
 	public class UICrankHandleDemo extends BaseUIDemo {
-		private var _mouseSimulator:MouseSimulator;
 		private var _leftHandCursor:Cursor;
 
 		private var _imgUrl:String = "http://www.taramtamtam.com/wallpapers/Animal/M/Monkey/images/Monkey_2.jpg";
@@ -33,7 +32,8 @@ package com.as3nui.airkinect.extended.demos.ui {
 		
 		override protected function initDemo():void {
 			UIManager.init(stage);
-			_mouseSimulator = new MouseSimulator(stage);
+			MouseSimulator.init(stage);
+
 			_container = new Sprite();
 			this.addChild(_container);
 			this.addChild(_rgbCamera);
@@ -71,7 +71,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 			_crankHandle.addEventListener(UIEvent.CAPTURE, onCrankCapture);
 			_crankHandle.addEventListener(UIEvent.MOVE, onCrankMove);
 			//_crankHandle.showCaptureArea();
-//			_crankHandle.drawDebug = true;
+			_crankHandle.drawDebug = true;
 		}
 
 		private function onCrankCapture(event:UIEvent):void {

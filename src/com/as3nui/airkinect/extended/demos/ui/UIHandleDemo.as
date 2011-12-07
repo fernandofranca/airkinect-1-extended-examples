@@ -18,7 +18,6 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 	public class UIHandleDemo extends BaseUIDemo {
 		private var _container:Sprite;
-		private var _mouseSimulator:MouseSimulator;
 		private var _leftHandCursor:Cursor;
 
 		private var _info:TextField;
@@ -37,7 +36,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 		
 		override protected function initDemo():void {
 			UIManager.init(stage);
-			_mouseSimulator = new MouseSimulator(stage);
+			MouseSimulator.init(stage);
 
 			createCursor();
 			createHandles();

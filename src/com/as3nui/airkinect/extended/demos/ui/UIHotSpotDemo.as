@@ -21,7 +21,6 @@ package com.as3nui.airkinect.extended.demos.ui {
 	public class UIHotSpotDemo extends BaseUIDemo {
 		private var _gallery:Sprite;
 		private var _hotSpotBar:Sprite;
-		private var _mouseSimulator:MouseSimulator;
 		private var _leftHandCursor:Cursor;
 
 		//Gallery
@@ -39,7 +38,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 		
 		override protected function initDemo():void {
 			UIManager.init(stage);
-			_mouseSimulator = new MouseSimulator(stage);
+			MouseSimulator.init(stage);
 
 			createCursor();
 			createGallery();
