@@ -49,7 +49,7 @@ package com.as3nui.airkinect.extended.demos.recorder {
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 
-			AIRKinect.initialize(AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_SKELETON | AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_COLOR);
+//			AIRKinect.initialize(AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_SKELETON | AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_COLOR);
 
 			initRGBCamera();
 			initDemo();
@@ -57,7 +57,7 @@ package com.as3nui.airkinect.extended.demos.recorder {
 		}
 
 		protected function initRGBCamera():void {
-			AIRKinect.addEventListener(CameraFrameEvent.RGB, onRGBFrame);
+//			AIRKinect.addEventListener(CameraFrameEvent.RGB, onRGBFrame);
 			_rgbCamera = new Bitmap(new BitmapData(640, 480));
 			_rgbCamera.scaleX = _rgbCamera.scaleY = .25;
 			this.addChild(_rgbCamera);
@@ -82,7 +82,7 @@ package com.as3nui.airkinect.extended.demos.recorder {
 			this.addChild(_skeletonsSprite);
 
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+//			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
 
 			createUI();
 
@@ -185,9 +185,10 @@ package com.as3nui.airkinect.extended.demos.recorder {
 
 		private function drawSkeletons():void {
 			while (_skeletonsSprite.numChildren > 0) _skeletonsSprite.removeChildAt(0);
-			if (!AIRKinect.skeletonEnabled) return;
+//			if (!AIRKinect.skeletonEnabled) return;
 
-			var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
+			//var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
+			var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons;
 			var element:Vector3D;
 			var scaler:Vector3D = new Vector3D(stage.stageWidth, stage.stageHeight, KinectMaxDepthInFlash);
 			var elementSprite:Sprite;
