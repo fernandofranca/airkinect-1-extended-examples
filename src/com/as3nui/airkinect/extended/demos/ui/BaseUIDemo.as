@@ -49,7 +49,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 		protected function onStageResize(event:Event):void {
 			root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
-			_rgbCamera.y =  stage.stageHeight - _rgbCamera.height;
+			if(_rgbCamera) _rgbCamera.y =  stage.stageHeight - _rgbCamera.height;
 		}
 
 		protected function initDemo():void {

@@ -59,6 +59,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 			createCursor();
 			createHandles();
+
 			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
 		}
 
