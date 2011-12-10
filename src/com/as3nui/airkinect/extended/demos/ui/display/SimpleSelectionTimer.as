@@ -5,9 +5,9 @@
  * Time: 7:39 PM
  */
 package com.as3nui.airkinect.extended.demos.ui.display {
-	import com.as3nui.airkinect.extended.ui.display.BaseSelectionTimer;
+	import com.as3nui.airkinect.extended.ui.display.BaseTimerSprite;
 
-	public class SimpleSelectionTimer extends BaseSelectionTimer {
+	public class SimpleSelectionTimer extends BaseTimerSprite {
 		private var _size:Number = 25;
 		private var _color:uint;
 		public function SimpleSelectionTimer(color:uint = 0xff0000) {
