@@ -5,6 +5,7 @@
  * Time: 5:51 PM
  */
 package com.as3nui.airkinect.extended.demos.manager {
+	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.manager.AIRKinectManager;
 	import com.as3nui.airkinect.extended.manager.skeleton.Skeleton;
 	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
@@ -19,7 +20,7 @@ package com.as3nui.airkinect.extended.demos.manager {
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
-	public class ManagerDemo extends Sprite {
+	public class ManagerDemo extends BaseDemo {
 		//RGB Camera Bitmap
 		private var _rgbCamera:Bitmap;
 
@@ -33,18 +34,28 @@ package com.as3nui.airkinect.extended.demos.manager {
 		private var _activeSkeleton:Skeleton;
 
 		public function ManagerDemo() {
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
+			_demoName = "Skeleton Manager Demo";
 		}
 
-		private function onAddedToStage(event:Event):void {
+		override protected function onAddedToStage(event:Event):void {
+			super.onAddedToStage(event);
 			initDemo();
-
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
 
-		private function onStageResize(event:Event):void {
+		override protected function onRemovedFromStage(event:Event):void {
+			super.onRemovedFromStage(event);
+
+			this.removeChildren();
+			_rgbCamera.bitmapData.dispose();
+			_rgbCamera = null;
+
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			AIRKinectManager.shutdown();
+		}
+
+
+		override protected function onStageResize(event:Event):void {
+			super.onStageResize(event);
 			root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
 			if (_rgbCamera) _rgbCamera.y = stage.stageHeight - _rgbCamera.height;
 		}
@@ -55,8 +66,6 @@ package com.as3nui.airkinect.extended.demos.manager {
 
 			initRGBCamera();
 			initKinect();
-
-			NativeApplication.nativeApplication.addEventListener(Event.EXITING, onExiting);
 		}
 
 		private function initKinect():void {
@@ -80,10 +89,6 @@ package com.as3nui.airkinect.extended.demos.manager {
 		private function onKinectReconnected(success:Boolean):void {
 			// trace("kinect was found, reconnection success was :: "+ success);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		}
-
-		private function onExiting(event:Event):void {
-			AIRKinectManager.shutdown();
 		}
 
 		private function initRGBCamera():void {

@@ -27,15 +27,14 @@ package com.as3nui.airkinect.extended.demos.ui {
 		private var _slideOutput:TextField;
 
 		public function UISandboxDemo() {
+			_demoName = "UI: Sandbox";
 			_container = new Sprite();
 			this.addChild(_container);
-
 		}
 		
 		override protected function initDemo():void {
 			UIManager.init(stage);
 			MouseSimulator.init(stage);
-
 
 			createCursor();
 			createHandles();
@@ -46,13 +45,22 @@ package com.as3nui.airkinect.extended.demos.ui {
 			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
 		}
 
+		override protected function uninitDemo():void {
+			AIRKinect.removeEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+			super.uninitDemo();
+
+			this.removeChildren();
+			UIManager.dispose();
+			MouseSimulator.uninit();
+		}
+
 		private function createCrankHandles():void {
 			var crankHandle:ColoredCrankHandle = new ColoredCrankHandle();
 			crankHandle.x = 300;
 			crankHandle.y = 300;
 			this.addChild(crankHandle);
 
-			crankHandle.addEventListener(UIEvent.MOVE, onCrankMove);
+			crankHandle.addEventListener(UIEvent.MOVE, onCrankMove, false, 0, true);
 			crankHandle.showCaptureArea();
 			crankHandle.drawDebug = true;
 		}
@@ -69,13 +77,13 @@ package com.as3nui.airkinect.extended.demos.ui {
 			leftSlideHandle.x = 600;
 			leftSlideHandle.y = 300;
 			this.addChild(leftSlideHandle);
-			leftSlideHandle.addEventListener(UIEvent.SELECTED, onLeftSlideSelected);
+			leftSlideHandle.addEventListener(UIEvent.SELECTED, onLeftSlideSelected, false, 0, true);
 //			leftSlideHandle.showCaptureArea();
 
 			var rightSlideHandle:ColoredSlideHandle = new ColoredSlideHandle(0x00ff00, 30, SlideHandle.RIGHT);
 			rightSlideHandle.x = 600;
 			rightSlideHandle.y = 500;
-			rightSlideHandle.addEventListener(UIEvent.SELECTED, onRightSlideSelected);
+			rightSlideHandle.addEventListener(UIEvent.SELECTED, onRightSlideSelected, false, 0, true);
 			this.addChild(rightSlideHandle);
 //			rightSlideHandle.showCaptureArea();
 
@@ -101,7 +109,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 				handle.y = 100;
 
 				_container.addChild(handle);
-				handle.addEventListener(UIEvent.SELECTED, onHandleSelected);
+				handle.addEventListener(UIEvent.SELECTED, onHandleSelected, false, 0, true);
 				//handle.showCaptureArea();
 			}
 		}

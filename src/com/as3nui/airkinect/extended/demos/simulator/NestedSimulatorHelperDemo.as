@@ -5,21 +5,19 @@
  * Time: 5:51 PM
  */
 package com.as3nui.airkinect.extended.demos.simulator {
-	import com.as3nui.airkinect.extended.demos.manager.HistoryDemo;
-	import com.as3nui.airkinect.extended.demos.manager.ManagerDemo;
-	import com.as3nui.airkinect.extended.demos.manager.RegionsDemo;
+	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.demos.manager.SwipeDemo;
 	import com.as3nui.airkinect.extended.simulator.helpers.SkeletonSimulatorHelper;
 
-	import flash.display.Sprite;
 	import flash.events.Event;
 
-	public class NestedSimulatorHelperDemo extends Sprite {
+	public class NestedSimulatorHelperDemo extends BaseDemo {
 		public function NestedSimulatorHelperDemo() {
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
+			_demoName = "Nested Manager Demo with SimulatorHelper";
 		}
 
-		private function onAddedToStage(event:Event):void {
+		override protected function onAddedToStage(event:Event):void {
+			super.onAddedToStage(event);
 			initDemo();
 		}
 
@@ -32,6 +30,13 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 
 			SkeletonSimulatorHelper.init(stage);
+		}
+
+		override protected function onRemovedFromStage(event:Event):void {
+			super.onRemovedFromStage(event);
+
+			SkeletonSimulatorHelper.uninit();
+			this.removeChildren();
 		}
 	}
 }

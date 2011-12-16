@@ -5,23 +5,21 @@
  * Time: 5:51 PM
  */
 package com.as3nui.airkinect.extended.demos.simulator {
+	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.manager.AIRKinectManager;
 	import com.as3nui.airkinect.extended.manager.skeleton.Skeleton;
 	import com.as3nui.airkinect.extended.simulator.helpers.SkeletonSimulatorHelper;
 	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
 	import com.as3nui.nativeExtensions.kinect.data.SkeletonPosition;
 
-	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
-	public class HistorySimulatorHelperDemo extends Sprite {
+	public class HistorySimulatorHelperDemo extends BaseDemo {
 		//RGB Camera Bitmap
 		private var _rgbCamera:Bitmap;
 
@@ -38,18 +36,30 @@ package com.as3nui.airkinect.extended.demos.simulator {
 		private var _activeSkeleton:Skeleton;
 
 		public function HistorySimulatorHelperDemo() {
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
+			_demoName = "History with SimulatorHelper";
 		}
 
-		private function onAddedToStage(event:Event):void {
+
+		override protected function onAddedToStage(event:Event):void {
+			super.onAddedToStage(event);
 			initDemo();
-
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
 
-		private function onStageResize(event:Event):void {
+		override protected function onRemovedFromStage(event:Event):void {
+			super.onRemovedFromStage(event);
+
+			SkeletonSimulatorHelper.uninit();
+
+			this.removeChildren();
+			_rgbCamera.bitmapData.dispose();
+			_rgbCamera = null;
+			AIRKinectManager.shutdown();
+
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+
+		override protected function onStageResize(event:Event):void {
+			super.onStageResize(event);
 			root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
 			if (_rgbCamera) _rgbCamera.y = stage.stageHeight - _rgbCamera.height;
 		}
@@ -65,14 +75,12 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 			initRGBCamera();
 			initKinect();
-
-			NativeApplication.nativeApplication.addEventListener(Event.EXITING, onExiting);
 		}
 
 		private function initKinect():void {
 			// trace("initKinect");
 			AIRKinectManager.initialize(AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_SKELETON | AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_COLOR);
-		
+
 			AIRKinectManager.onSkeletonAdded.add(onSkeletonAdded);
 			AIRKinectManager.onSkeletonRemoved.add(onSkeletonRemoved);
 			AIRKinectManager.onKinectDisconnected.add(onKinectDisconnected);
@@ -86,10 +94,6 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 		private function onKinectReconnected(success:Boolean):void {
 
-		}
-
-		private function onExiting(event:Event):void {
-			AIRKinectManager.shutdown();
 		}
 
 		private function initRGBCamera():void {

@@ -5,6 +5,7 @@
  * Time: 5:51 PM
  */
 package com.as3nui.airkinect.extended.demos.manager {
+	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.manager.AIRKinectManager;
 	import com.as3nui.airkinect.extended.manager.regions.Region;
 	import com.as3nui.airkinect.extended.manager.regions.RegionPlanes;
@@ -16,8 +17,6 @@ package com.as3nui.airkinect.extended.demos.manager {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
@@ -25,7 +24,7 @@ package com.as3nui.airkinect.extended.demos.manager {
 	import flash.media.SoundChannel;
 	import flash.utils.Dictionary;
 
-	public class RegionsDemo extends Sprite {
+	public class RegionsDemo extends BaseDemo {
 
 		//RGB Camera Bitmap
 		private var _rgbCamera:Bitmap;
@@ -69,24 +68,40 @@ package com.as3nui.airkinect.extended.demos.manager {
 
 
 		public function RegionsDemo() {
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
-		}
+			_demoName = "Regions Demo";
 
-		private function onAddedToStage(event:Event):void {
-			initDemo();
-
-			_soundChannels = new Dictionary(true);
 			_bass = new BassSound() as Sound;
 			_drums = new DrumSound() as Sound;
 			_guitar = new GuitarSound() as Sound;
 			_keyboard = new KeyboardSound() as Sound;
-
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
 
-		private function onStageResize(event:Event):void {
+		override protected function onAddedToStage(event:Event):void {
+			super.onAddedToStage(event);
+			_soundChannels = new Dictionary(true);
+			initDemo();
+		}
+
+		override protected function onRemovedFromStage(event:Event):void {
+			super.onRemovedFromStage(event);
+
+			this.removeChildren();
+
+			_rgbCamera.bitmapData.dispose();
+			_rgbCamera = null;
+
+			if (_soundChannels[_drums]) (_soundChannels[_drums] as SoundChannel).stop();
+			if (_soundChannels[_guitar]) (_soundChannels[_guitar] as SoundChannel).stop();
+			if (_soundChannels[_bass]) (_soundChannels[_bass] as SoundChannel).stop();
+			if (_soundChannels[_keyboard]) (_soundChannels[_keyboard] as SoundChannel).stop();
+
+			_touchRegions = _touchedRegions = null;
+			AIRKinectManager.shutdown();
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+
+		override protected function onStageResize(event:Event):void {
+			super.onStageResize(event);
 			root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
 			if (_rgbCamera) _rgbCamera.y = stage.stageHeight - _rgbCamera.height;
 		}
@@ -128,10 +143,6 @@ package com.as3nui.airkinect.extended.demos.manager {
 		private function onKinectReconnected(success:Boolean):void {
 //			trace("kinect was found, reconnection success was :: "+ success);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		}
-
-		private function onExiting(event:Event):void {
-			AIRKinectManager.shutdown();
 		}
 
 		private function initRGBCamera():void {

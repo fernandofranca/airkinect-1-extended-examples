@@ -5,6 +5,7 @@
  * Time: 4:03 PM
  */
 package com.as3nui.airkinect.extended.demos.simulator {
+	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.simulator.SkeletonPlayer;
 	import com.as3nui.airkinect.extended.simulator.SkeletonRecorder;
 	import com.as3nui.nativeExtensions.kinect.AIRKinect;
@@ -17,8 +18,6 @@ package com.as3nui.airkinect.extended.demos.simulator {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
@@ -30,7 +29,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
 
-	public class SimulatorDemo extends Sprite {
+	public class SimulatorDemo extends BaseDemo {
 		private const KinectMaxDepthInFlash:Number = 200;
 
 
@@ -42,19 +41,30 @@ package com.as3nui.airkinect.extended.demos.simulator {
 		private var _skeletonPlayer:SkeletonPlayer;
 
 		public function SimulatorDemo() {
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
+			_demoName = "Basic Manual Simulator";
 		}
 
-		protected function onAddedToStage(event:Event):void {
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-
+		override protected function onAddedToStage(event:Event):void {
+			super.onAddedToStage(event);
 			AIRKinect.initialize(AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_SKELETON | AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_COLOR);
 
 			initRGBCamera();
 			initDemo();
-			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
+
+		override protected function onRemovedFromStage(event:Event):void {
+			super.onRemovedFromStage(event);
+
+			this.removeChildren();
+			_rgbCamera.bitmapData.dispose();
+			_rgbCamera = null;
+			AIRKinect.shutdown();
+
+			AIRKinect.removeEventListener(CameraFrameEvent.RGB, onRGBFrame);
+			_skeletonPlayer.removeEventListener(SkeletonFrameEvent.UPDATE, onSimulatedSkeletonFrame);
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+
 
 		protected function initRGBCamera():void {
 			AIRKinect.addEventListener(CameraFrameEvent.RGB, onRGBFrame);
@@ -68,7 +78,9 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			_rgbCamera.bitmapData = event.frame;
 		}
 
-		protected function onStageResize(event:Event):void {
+
+		override protected function onStageResize(event:Event):void {
+			super.onStageResize(event);
 			root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
 			_rgbCamera.y = stage.stageHeight - _rgbCamera.height;
 		}
@@ -76,7 +88,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 		protected function initDemo():void {
 			_skeletonRecorder = new SkeletonRecorder();
 			_skeletonPlayer = new SkeletonPlayer();
-			_skeletonPlayer.addEventListener(SkeletonFrameEvent.UPDATE, onSimulatedSkeletonFrame);
+			_skeletonPlayer.addEventListener(SkeletonFrameEvent.UPDATE, onSimulatedSkeletonFrame, false, 0, true);
 
 			_skeletonsSprite = new Sprite();
 			this.addChild(_skeletonsSprite);
@@ -118,19 +130,19 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			recordButton.x = 10;
 			recordButton.y = 10;
 			this.addChild(recordButton);
-			recordButton.addEventListener(MouseEvent.CLICK, onRecordClick);
+			recordButton.addEventListener(MouseEvent.CLICK, onRecordClick, false, 0, true);
 
 			var playButton:SimpleButton = new SimpleButton("Play", 0xeeeeee);
 			playButton.x = 10;
 			playButton.y = 50;
 			this.addChild(playButton);
-			playButton.addEventListener(MouseEvent.CLICK, onPlayClick);
+			playButton.addEventListener(MouseEvent.CLICK, onPlayClick, false, 0, true);
 
 			var stopButton:SimpleButton = new SimpleButton("Stop", 0xeeeeee);
 			stopButton.x = 70;
 			stopButton.y = 10;
 			this.addChild(stopButton);
-			stopButton.addEventListener(MouseEvent.CLICK, onStopClick);
+			stopButton.addEventListener(MouseEvent.CLICK, onStopClick, false, 0, true);
 		}
 
 		private function onRecordClick(event:MouseEvent):void {
@@ -157,7 +169,8 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 		}
 
-		private function onSaveCancel(e:Event):void {}
+		private function onSaveCancel(e:Event):void {
+		}
 
 
 		private function onPlayClick(event:MouseEvent):void {
@@ -168,7 +181,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			var txtFilter:FileFilter = new FileFilter("XML", "*.xml");
 			var file:File = new File();
 			file.addEventListener(Event.SELECT, onXMLFileSelected);
-			file.browseForOpen("Please select a file...",[txtFilter]);
+			file.browseForOpen("Please select a file...", [txtFilter]);
 		}
 
 		private function onXMLFileSelected(event:Event):void {
@@ -178,17 +191,15 @@ package com.as3nui.airkinect.extended.demos.simulator {
 				var xml:XML = XML(fileStream.readUTFBytes(fileStream.bytesAvailable));
 				fileStream.close();
 				_skeletonPlayer.play(xml, true);
-			} catch(e:Error) {
+			} catch (e:Error) {
 				trace("Error loading Config : " + e.message);
 			}
 		}
 
 		private function drawSkeletons():void {
 			while (_skeletonsSprite.numChildren > 0) _skeletonsSprite.removeChildAt(0);
-//			if (!AIRKinect.skeletonEnabled) return;
 
-			//var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
-			var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons;
+			var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
 			var element:Vector3D;
 			var scaler:Vector3D = new Vector3D(stage.stageWidth, stage.stageHeight, KinectMaxDepthInFlash);
 			var elementSprite:Sprite;

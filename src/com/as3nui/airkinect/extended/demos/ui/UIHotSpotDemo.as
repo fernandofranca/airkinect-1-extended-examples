@@ -1,9 +1,6 @@
 package com.as3nui.airkinect.extended.demos.ui {
-	import com.as3nui.airkinect.extended.demos.ui.*;
-	import com.as3nui.airkinect.extended.demos.ui.display.ColoredSlideHandle;
 	import com.as3nui.airkinect.extended.demos.ui.display.SimpleSelectionTimer;
 	import com.as3nui.airkinect.extended.ui.components.HotSpot;
-	import com.as3nui.airkinect.extended.ui.components.SlideHandle;
 	import com.as3nui.airkinect.extended.ui.components.Target;
 	import com.as3nui.airkinect.extended.ui.events.UIEvent;
 	import com.as3nui.airkinect.extended.ui.helpers.MouseSimulator;
@@ -33,7 +30,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 		private var _sectionPadding:Number;
 
 		public function UIHotSpotDemo() {
-
+			_demoName = "UI: Hotspot";
 		}
 		
 		override protected function initDemo():void {
@@ -45,6 +42,16 @@ package com.as3nui.airkinect.extended.demos.ui {
 			createHotSpots();
 			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
 		}
+
+		override protected function uninitDemo():void {
+			AIRKinect.removeEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+			super.uninitDemo();
+
+			this.removeChildren();
+			UIManager.dispose();
+			MouseSimulator.uninit();
+		}
+
 
 		private function createGallery():void {
 			_gallery = new Sprite();
@@ -108,7 +115,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 				hotSpot.x = i * hotspotPadding + (i * box.height);
 				hotSpot.data = i;
 				_hotSpotBar.addChild(hotSpot);
-				hotSpot.addEventListener(UIEvent.OVER, onHotSpotOver);
+				hotSpot.addEventListener(UIEvent.OVER, onHotSpotOver, false, 0, true);
 			}
 
 			_hotSpotBar.x = (stage.stageWidth/2) - (_hotSpotBar.width/2);

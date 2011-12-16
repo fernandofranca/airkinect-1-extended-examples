@@ -34,9 +34,9 @@ package com.as3nui.airkinect.extended.demos.ui {
 		private var _leftSlideHandle:ColoredSlideHandle;
 
 		public function UISlideHandleDemo() {
-
+			_demoName = "UI Slide Handle";
 		}
-		
+
 		override protected function initDemo():void {
 			UIManager.init(stage);
 			MouseSimulator.init(stage);
@@ -47,36 +47,52 @@ package com.as3nui.airkinect.extended.demos.ui {
 			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
 		}
 
+		override protected function uninitDemo():void {
+			AIRKinect.removeEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+			super.uninitDemo();
+
+			_leftSlideHandle.removeEventListener(UIEvent.SELECTED, onLeftSlideSelected);
+			_leftSlideHandle.removeEventListener(UIEvent.MOVE, onLeftMove);
+
+			_rightSlideHandle.removeEventListener(UIEvent.SELECTED, onRightSlideSelected);
+			_rightSlideHandle.removeEventListener(UIEvent.MOVE, onRightMove);
+
+
+			this.removeChildren();
+			UIManager.dispose();
+			MouseSimulator.uninit();
+		}
+
 		private function createGallery():void {
 			_gallery = new Sprite();
 			this.addChild(_gallery);
 
-			function getBox():Sprite{
+			function getBox():Sprite {
 				var s:Sprite = new Sprite();
-				s.graphics.beginFill(Math.random()*0xffffff);
-				s.graphics.drawRect(0,0,200,200);
+				s.graphics.beginFill(Math.random() * 0xffffff);
+				s.graphics.drawRect(0, 0, 200, 200);
 				return s;
 			}
 
 			var box:Sprite = getBox();
-			_totalSections 	= 4;
-			_totalRows 		= 3;
-			_totalColumns 	= 2;
+			_totalSections = 4;
+			_totalRows = 3;
+			_totalColumns = 2;
 
 			var rowSpacing:uint = 25;
 			var colSpacing:uint = 25;
-			_totalSectionSize = (_totalRows * box.width) + (_totalRows*rowSpacing);
-			_sectionPadding = (stage.stageWidth - _totalSectionSize)/2;
+			_totalSectionSize = (_totalRows * box.width) + (_totalRows * rowSpacing);
+			_sectionPadding = (stage.stageWidth - _totalSectionSize) / 2;
 
 			var target:Target;
-			for (var sectionIndex:uint = 0;sectionIndex<_totalSections;sectionIndex++){
-				for (var row:uint = 0;row<_totalRows;row++){
-					for (var col:uint = 0;col<_totalColumns;col++){
+			for (var sectionIndex:uint = 0; sectionIndex < _totalSections; sectionIndex++) {
+				for (var row:uint = 0; row < _totalRows; row++) {
+					for (var col:uint = 0; col < _totalColumns; col++) {
 						box = getBox();
-						target =  new Target(box, new SimpleSelectionTimer());
-						target.x += ((sectionIndex +1) * _sectionPadding);
-						target.x += ((sectionIndex *_totalRows) * box.width);
-						target.x += ((sectionIndex*_totalRows) * rowSpacing);
+						target = new Target(box, new SimpleSelectionTimer());
+						target.x += ((sectionIndex + 1) * _sectionPadding);
+						target.x += ((sectionIndex * _totalRows) * box.width);
+						target.x += ((sectionIndex * _totalRows) * rowSpacing);
 						target.x += (row * box.width);
 						target.x += (row * rowSpacing);
 						target.y = col * (box.height + colSpacing);
@@ -85,45 +101,45 @@ package com.as3nui.airkinect.extended.demos.ui {
 				}
 			}
 
-			_currentSectionIndex = Math.floor(_totalSections/2);
+			_currentSectionIndex = Math.floor(_totalSections / 2);
 			_gallery.x = -_currentSectionIndex * (_totalSectionSize + _sectionPadding);
-			_gallery.y = (stage.stageHeight/2) - (_gallery.height/2);
+			_gallery.y = (stage.stageHeight / 2) - (_gallery.height / 2);
 		}
 
 		private function createHandles():void {
 			_leftSlideHandle = new ColoredSlideHandle(0x00ff00, 30, SlideHandle.LEFT);
 			this.addChild(_leftSlideHandle);
 			_leftSlideHandle.x = 930;
-			_leftSlideHandle.y = (stage.stageHeight/2) - 30;
-			_leftSlideHandle.addEventListener(UIEvent.SELECTED, onLeftSlideSelected);
-			_leftSlideHandle.addEventListener(UIEvent.MOVE, onLeftMove);
+			_leftSlideHandle.y = (stage.stageHeight / 2) - 30;
+			_leftSlideHandle.addEventListener(UIEvent.SELECTED, onLeftSlideSelected, false, 0, true);
+			_leftSlideHandle.addEventListener(UIEvent.MOVE, onLeftMove, false, 0, true);
 //			_leftSlideHandle.showCaptureArea();
 
 			_rightSlideHandle = new ColoredSlideHandle(0x00ff00, 30, SlideHandle.RIGHT);
 			_rightSlideHandle.x = 10;
 			_rightSlideHandle.y = _leftSlideHandle.y;
-			_rightSlideHandle.addEventListener(UIEvent.SELECTED, onRightSlideSelected);
-			_rightSlideHandle.addEventListener(UIEvent.MOVE, onRightMove);
+			_rightSlideHandle.addEventListener(UIEvent.SELECTED, onRightSlideSelected, false, 0, true);
+			_rightSlideHandle.addEventListener(UIEvent.MOVE, onRightMove, false, 0, true);
 			this.addChild(_rightSlideHandle);
 //			_rightSlideHandle.showCaptureArea();
 		}
 
 		private function onRightMove(event:UIEvent):void {
-			if(_currentSectionIndex <=0) return;
+			if (_currentSectionIndex <= 0) return;
 			var originalX:Number = -_currentSectionIndex * (_totalSectionSize + _sectionPadding);
-			var destinationX:Number = originalX + (event.value * ((_totalSectionSize + _sectionPadding)/2));
+			var destinationX:Number = originalX + (event.value * ((_totalSectionSize + _sectionPadding) / 2));
 			TweenLite.to(_gallery, .3, {x:destinationX});
 		}
 
 		private function onLeftMove(event:UIEvent):void {
-			if(_currentSectionIndex >=(_totalSections-1)) return;
+			if (_currentSectionIndex >= (_totalSections - 1)) return;
 			var originalX:Number = -_currentSectionIndex * (_totalSectionSize + _sectionPadding);
-			var destinationX:Number = originalX - (event.value * ((_totalSectionSize + _sectionPadding)/2));
+			var destinationX:Number = originalX - (event.value * ((_totalSectionSize + _sectionPadding) / 2));
 			TweenLite.to(_gallery, .3, {x:destinationX});
 		}
 
 		private function onRightSlideSelected(event:UIEvent):void {
-			if(_currentSectionIndex <=0) return;
+			if (_currentSectionIndex <= 0) return;
 			_currentSectionIndex--;
 			TweenLite.to(_gallery, 1, {x:-_currentSectionIndex * (_totalSectionSize + _sectionPadding)});
 			updateSliders();
@@ -131,22 +147,22 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 
 		private function onLeftSlideSelected(event:UIEvent):void {
-			if(_currentSectionIndex >=(_totalSections-1)) return;
+			if (_currentSectionIndex >= (_totalSections - 1)) return;
 			_currentSectionIndex++;
 			TweenLite.to(_gallery, 1, {x:-_currentSectionIndex * (_totalSectionSize + _sectionPadding)});
 			updateSliders();
 		}
 
 		private function updateSliders():void {
-			if(_currentSectionIndex >=(_totalSections-1)) {
+			if (_currentSectionIndex >= (_totalSections - 1)) {
 				_leftSlideHandle.enabled = false;
-			}else if(!_leftSlideHandle.enabled) {
+			} else if (!_leftSlideHandle.enabled) {
 				_leftSlideHandle.enabled = true;
 			}
 
-			if(_currentSectionIndex <=0) {
+			if (_currentSectionIndex <= 0) {
 				_rightSlideHandle.enabled = false;
-			} else if(!_rightSlideHandle.enabled) {
+			} else if (!_rightSlideHandle.enabled) {
 				_rightSlideHandle.enabled = true;
 			}
 		}
@@ -163,22 +179,22 @@ package com.as3nui.airkinect.extended.demos.ui {
 		}
 
 		private function onSkeletonFrame(event:SkeletonFrameEvent):void {
-			if(event.skeletonFrame.numSkeletons >0){
+			if (event.skeletonFrame.numSkeletons > 0) {
 				var skeletonPosition:SkeletonPosition = event.skeletonFrame.getSkeletonPosition(0);
 				var leftHand:Vector3D = skeletonPosition.getElement(SkeletonPosition.HAND_RIGHT);
 				//var leftHand:Vector3D = skeletonPosition.getElement(SkeletonPosition.WRIST_LEFT);
 				var pad:Number = .35;
 
 				_leftHandCursor.enabled = true;
-				if(leftHand.x < pad || leftHand.x > 1-pad) _leftHandCursor.enabled = false;
-				if(leftHand.y < pad || leftHand.y > 1-pad) _leftHandCursor.enabled = false;
+				if (leftHand.x < pad || leftHand.x > 1 - pad) _leftHandCursor.enabled = false;
+				if (leftHand.y < pad || leftHand.y > 1 - pad) _leftHandCursor.enabled = false;
 
-				if(!_leftHandCursor.enabled) return;
-				
+				if (!_leftHandCursor.enabled) return;
+
 				leftHand.x -= pad;
-				leftHand.x /= (1-pad) - pad;
+				leftHand.x /= (1 - pad) - pad;
 				leftHand.y -= pad;
-				leftHand.y /= (1-pad) - pad;
+				leftHand.y /= (1 - pad) - pad;
 
 				_leftHandCursor.update(leftHand.x, leftHand.y, leftHand.z);
 			}

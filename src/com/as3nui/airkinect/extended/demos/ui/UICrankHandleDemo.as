@@ -9,7 +9,6 @@ package com.as3nui.airkinect.extended.demos.ui {
 	import com.as3nui.nativeExtensions.kinect.events.SkeletonFrameEvent;
 
 	import flash.display.Loader;
-	import flash.display.LoaderInfo;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -25,9 +24,11 @@ package com.as3nui.airkinect.extended.demos.ui {
 		private var _crankHandle:ColoredCrankHandle;
 		private var _container:Sprite;
 		private var _originalScale:Number;
+		private var _imageLoader:Loader;
 
 		public function UICrankHandleDemo() {
-
+			_demoName = "UI: CrankHandle";
+			_imageLoader= new Loader();
 		}
 		
 		override protected function initDemo():void {
@@ -41,17 +42,26 @@ package com.as3nui.airkinect.extended.demos.ui {
 			loadImage();
 		}
 
+		override protected function uninitDemo():void {
+			AIRKinect.removeEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+			_imageLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onImageLoadComplete);
+			_imageLoader.unloadAndStop();
+			super.uninitDemo();
+
+			this.removeChildren();
+			UIManager.dispose();
+			MouseSimulator.uninit();
+		}
+
 		private function loadImage():void {
-			var loader:Loader = new Loader()
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoadComplete);
-			loader.load(new URLRequest(_imgUrl))
+			_imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoadComplete);
+			_imageLoader.load(new URLRequest(_imgUrl))
 		}
 
 		private function onImageLoadComplete(event:Event):void {
-			var loader:Loader = (event.target as LoaderInfo).loader;
-			loader.content.x -= loader.content.width/2;
-			loader.content.y -= loader.content.height/2;
-			_container.addChild(loader.content);
+			_imageLoader.content.x -= _imageLoader.content.width/2;
+			_imageLoader.content.y -= _imageLoader.content.height/2;
+			_container.addChild(_imageLoader.content);
 			
 			_container.x = stage.stageWidth/2;
 			_container.y = stage.stageHeight/2;
@@ -69,8 +79,8 @@ package com.as3nui.airkinect.extended.demos.ui {
 			_crankHandle.y = 300;
 			this.addChild(_crankHandle);
 
-			_crankHandle.addEventListener(UIEvent.CAPTURE, onCrankCapture);
-			_crankHandle.addEventListener(UIEvent.MOVE, onCrankMove);
+			_crankHandle.addEventListener(UIEvent.CAPTURE, onCrankCapture, false, 0, true);
+			_crankHandle.addEventListener(UIEvent.MOVE, onCrankMove, false, 0, true);
 			//_crankHandle.showCaptureArea();
 			_crankHandle.drawDebug = true;
 		}

@@ -1,5 +1,4 @@
 package com.as3nui.airkinect.extended.demos.ui {
-	import com.as3nui.airkinect.extended.demos.ui.*;
 	import com.as3nui.airkinect.extended.demos.ui.display.SimpleSelectionTimer;
 	import com.as3nui.airkinect.extended.ui.components.HotSpot;
 	import com.as3nui.airkinect.extended.ui.components.RepeatingSelectableHandle;
@@ -35,7 +34,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 		private var _rightHandle:RepeatingSelectableHandle;
 
 		public function UIRepeatHandleDemo() {
-
+			_demoName = "UI: Repeat Handle";
 		}
 
 		override protected function initDemo():void {
@@ -46,6 +45,15 @@ package com.as3nui.airkinect.extended.demos.ui {
 			createGallery();
 			createHotSpots();
 			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+		}
+
+		override protected function uninitDemo():void {
+			AIRKinect.removeEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+			super.uninitDemo();
+
+			this.removeChildren();
+			UIManager.dispose();
+			MouseSimulator.uninit();
 		}
 
 		private function createGallery():void {
@@ -100,10 +108,10 @@ package com.as3nui.airkinect.extended.demos.ui {
 			}
 
 			_leftHandle = new RepeatingSelectableHandle(getHotSpotGraphic(), new SimpleSelectionTimer(), new SimpleSelectionTimer(0x00ff00));
-			_leftHandle.addEventListener(UIEvent.SELECTED, onLeftSelected);
+			_leftHandle.addEventListener(UIEvent.SELECTED, onLeftSelected, false, 0, true);
 
 			_rightHandle = new RepeatingSelectableHandle(getHotSpotGraphic(), new SimpleSelectionTimer(), new SimpleSelectionTimer(0x00ff00));
-			_rightHandle.addEventListener(UIEvent.SELECTED, onRightSelected);
+			_rightHandle.addEventListener(UIEvent.SELECTED, onRightSelected, false, 0, true);
 
 			_leftHandle.x = 30;
 			_leftHandle.y = 30;

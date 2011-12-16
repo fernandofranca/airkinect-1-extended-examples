@@ -30,10 +30,11 @@ package com.as3nui.airkinect.extended.demos.ui {
 		private var IconSelected:Class;
 
 		public function UIHandleDemo() {
+			_demoName = "UI: Handle";
 			_container = new Sprite();
 			this.addChild(_container);
 		}
-		
+
 		override protected function initDemo():void {
 			UIManager.init(stage);
 			MouseSimulator.init(stage);
@@ -43,6 +44,15 @@ package com.as3nui.airkinect.extended.demos.ui {
 			AIRKinect.addEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
 		}
 
+		override protected function uninitDemo():void {
+			AIRKinect.removeEventListener(SkeletonFrameEvent.UPDATE, onSkeletonFrame);
+			super.uninitDemo();
+
+			this.removeChildren();
+			MouseSimulator.uninit();
+			UIManager.dispose();
+		}
+
 		private function createHandles():void {
 			_info = new TextField();
 			this.addChild(_info);
@@ -50,8 +60,8 @@ package com.as3nui.airkinect.extended.demos.ui {
 			var handle:Handle = new SelectableHandle(new IconIdle() as Bitmap, new SimpleSelectionTimer(), new IconSelected() as Bitmap, null, 1, .1, .1, .3);
 			_container.addChild(handle);
 
-			handle.x = (stage.stageWidth/2) - (handle.width/2);
-			handle.y = (stage.stageHeight/2) - (handle.height/2);
+			handle.x = (stage.stageWidth / 2) - (handle.width / 2);
+			handle.y = (stage.stageHeight / 2) - (handle.height / 2);
 			handle.addEventListener(UIEvent.SELECTED, onHandleSelected);
 			handle.showCaptureArea();
 		}
@@ -68,22 +78,22 @@ package com.as3nui.airkinect.extended.demos.ui {
 		}
 
 		private function onSkeletonFrame(event:SkeletonFrameEvent):void {
-			if(event.skeletonFrame.numSkeletons >0){
+			if (event.skeletonFrame.numSkeletons > 0) {
 				var skeletonPosition:SkeletonPosition = event.skeletonFrame.getSkeletonPosition(0);
 				//var leftHand:Vector3D = skeletonPosition.getElement(SkeletonPosition.HAND_LEFT);
 				var leftHand:Vector3D = skeletonPosition.getElement(SkeletonPosition.WRIST_LEFT);
 				var pad:Number = .35;
 
 				_leftHandCursor.enabled = true;
-				if(leftHand.x < pad || leftHand.x > 1-pad) _leftHandCursor.enabled = false;
-				if(leftHand.y < pad || leftHand.y > 1-pad) _leftHandCursor.enabled = false;
+				if (leftHand.x < pad || leftHand.x > 1 - pad) _leftHandCursor.enabled = false;
+				if (leftHand.y < pad || leftHand.y > 1 - pad) _leftHandCursor.enabled = false;
 
-				if(!_leftHandCursor.enabled) return;
-				
+				if (!_leftHandCursor.enabled) return;
+
 				leftHand.x -= pad;
-				leftHand.x /= (1-pad) - pad;
+				leftHand.x /= (1 - pad) - pad;
 				leftHand.y -= pad;
-				leftHand.y /= (1-pad) - pad;
+				leftHand.y /= (1 - pad) - pad;
 
 				_leftHandCursor.update(leftHand.x, leftHand.y, leftHand.z);
 			}

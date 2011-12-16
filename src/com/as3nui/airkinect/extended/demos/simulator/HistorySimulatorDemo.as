@@ -5,6 +5,7 @@
  * Time: 5:51 PM
  */
 package com.as3nui.airkinect.extended.demos.simulator {
+	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.manager.AIRKinectManager;
 	import com.as3nui.airkinect.extended.manager.skeleton.Skeleton;
 	import com.as3nui.airkinect.extended.simulator.SkeletonPlayer;
@@ -30,7 +31,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 	import flash.net.FileFilter;
 	import flash.ui.Keyboard;
 
-	public class HistorySimulatorDemo extends Sprite {
+	public class HistorySimulatorDemo extends BaseDemo {
 		//RGB Camera Bitmap
 		private var _rgbCamera:Bitmap;
 
@@ -50,18 +51,28 @@ package com.as3nui.airkinect.extended.demos.simulator {
 		private var _skeletonPlayer:SkeletonPlayer;
 
 		public function HistorySimulatorDemo() {
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
+			_demoName = "History with Manual Simulator";
 		}
 
-		private function onAddedToStage(event:Event):void {
+		override protected function onAddedToStage(event:Event):void {
+			super.onAddedToStage(event);
 			initDemo();
-
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
 
-		private function onStageResize(event:Event):void {
+		override protected function onRemovedFromStage(event:Event):void {
+			super.onRemovedFromStage(event);
+
+			this.removeChildren();
+			_rgbCamera.bitmapData.dispose();
+			_rgbCamera = null;
+			AIRKinectManager.shutdown();
+
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+
+		override protected function onStageResize(event:Event):void {
+			super.onStageResize(event);
 			root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
 			if (_rgbCamera) _rgbCamera.y = stage.stageHeight - _rgbCamera.height;
 		}
@@ -79,8 +90,6 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			initKinect();
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-
-			NativeApplication.nativeApplication.addEventListener(Event.EXITING, onExiting);
 		}
 
 		private function initKinect():void {
@@ -107,10 +116,6 @@ package com.as3nui.airkinect.extended.demos.simulator {
 		private function onKinectReconnected(success:Boolean):void {
 			// trace("kinect was found, reconnection success was :: "+ success);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-		}
-
-		private function onExiting(event:Event):void {
-			AIRKinectManager.shutdown();
 		}
 
 		private function initRGBCamera():void {

@@ -5,6 +5,7 @@
  * Time: 4:03 PM
  */
 package com.as3nui.airkinect.extended.demos.simulator {
+	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.simulator.helpers.SkeletonSimulatorHelper;
 	import com.as3nui.nativeExtensions.kinect.AIRKinect;
 	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
@@ -16,35 +17,44 @@ package com.as3nui.airkinect.extended.demos.simulator {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
-	public class SimulatorHelperDemo extends Sprite {
+	public class SimulatorHelperDemo extends BaseDemo {
 		private const KinectMaxDepthInFlash:Number = 200;
 
-		
+
 		private var _rgbCamera:Bitmap;
 		private var _skeletonsSprite:Sprite;
 		private var _currentSkeletons:Vector.<SkeletonPosition>;
 		private var _currentSimulatedSkeletons:Vector.<SkeletonPosition>;
 
 		public function SimulatorHelperDemo() {
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
+			_demoName = "Basic Simulator Helper";
 		}
 
-		protected function onAddedToStage(event:Event):void {
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-
+		override protected function onAddedToStage(event:Event):void {
+			super.onAddedToStage(event);
 			AIRKinect.initialize(AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_SKELETON | AIRKinectFlags.NUI_INITIALIZE_FLAG_USES_COLOR);
 
 			initRGBCamera();
 			initDemo();
-			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
+
+		override protected function onRemovedFromStage(event:Event):void {
+			super.onRemovedFromStage(event);
+
+			SkeletonSimulatorHelper.uninit();
+			this.removeChildren();
+			_rgbCamera.bitmapData.dispose();
+			_rgbCamera = null;
+			AIRKinect.shutdown();
+
+			AIRKinect.removeEventListener(CameraFrameEvent.RGB, onRGBFrame);
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+
 
 		protected function initRGBCamera():void {
 			AIRKinect.addEventListener(CameraFrameEvent.RGB, onRGBFrame);
@@ -58,9 +68,10 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			_rgbCamera.bitmapData = event.frame;
 		}
 
-		protected function onStageResize(event:Event):void {
-			root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
-			if(_rgbCamera) _rgbCamera.y = stage.stageHeight - _rgbCamera.height;
+		override protected function onStageResize(event:Event):void {
+			super.onStageResize(event);
+		root.transform.perspectiveProjection.projectionCenter = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
+			if (_rgbCamera) _rgbCamera.y = stage.stageHeight - _rgbCamera.height;
 		}
 
 		protected function initDemo():void {
@@ -100,10 +111,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 		private function drawSkeletons():void {
 			while (_skeletonsSprite.numChildren > 0) _skeletonsSprite.removeChildAt(0);
-//			if (!AIRKinect.skeletonEnabled) return;
-
-			//var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
-			var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons;
+			var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
 			var element:Vector3D;
 			var scaler:Vector3D = new Vector3D(stage.stageWidth, stage.stageHeight, KinectMaxDepthInFlash);
 			var elementSprite:Sprite;
