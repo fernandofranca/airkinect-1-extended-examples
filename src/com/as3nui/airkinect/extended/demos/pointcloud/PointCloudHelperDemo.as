@@ -106,11 +106,13 @@ package com.as3nui.airkinect.extended.demos.pointcloud {
 
 		private function onKinectLoaded():void {
 			_rgbImage = new Bitmap(new BitmapData(AIRKinect.rgbSize.x, AIRKinect.rgbSize.y, true, 0xffff0000));
+			_rgbImage.y = 20;
 			_rgbImage.scaleX = _rgbImage.scaleY = .5;
 			this.addChild(_rgbImage);
 			AIRKinect.addEventListener(CameraFrameEvent.RGB, onRGBFrame);
 
 			_depthImage = new Bitmap(new BitmapData(AIRKinect.depthSize.x, AIRKinect.depthSize.y, true, 0xffff0000));
+			_depthImage.y = 20
 			this.addChild(_depthImage);
 			AIRKinect.addEventListener(CameraFrameEvent.DEPTH, onDepthFrame);
 
@@ -228,9 +230,9 @@ package com.as3nui.airkinect.extended.demos.pointcloud {
 
 		private function savePoints():void {
 			if(!_depthPoints) return;
-			PointCloudHelper.savePTS(_depthPoints);
+//			PointCloudHelper.savePTS(_depthPoints);
 //			PointCloudHelper.saveXYZ(_depthPoints);
-//			PointCloudHelper.savePLY(_depthPoints);
+			PointCloudHelper.savePLY(_depthPoints);
 		}
 	}
 }

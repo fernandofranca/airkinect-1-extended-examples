@@ -97,6 +97,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 		private function createHandles():void {
 			_info = new TextField();
+			_info.y = 20;
 			this.addChild(_info);
 
 			var handle:Handle;

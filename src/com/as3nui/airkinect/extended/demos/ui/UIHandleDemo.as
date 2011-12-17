@@ -55,6 +55,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 		private function createHandles():void {
 			_info = new TextField();
+			_info.y = 20;
 			this.addChild(_info);
 
 			var handle:Handle = new SelectableHandle(new IconIdle() as Bitmap, new SimpleSelectionTimer(), new IconSelected() as Bitmap, null, 1, .1, .1, .3);

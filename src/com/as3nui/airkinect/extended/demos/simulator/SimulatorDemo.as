@@ -128,19 +128,19 @@ package com.as3nui.airkinect.extended.demos.simulator {
 		private function createUI():void {
 			var recordButton:SimpleButton = new SimpleButton("Record", 0xeeeeee);
 			recordButton.x = 10;
-			recordButton.y = 10;
+			recordButton.y = 20;
 			this.addChild(recordButton);
 			recordButton.addEventListener(MouseEvent.CLICK, onRecordClick, false, 0, true);
 
 			var playButton:SimpleButton = new SimpleButton("Play", 0xeeeeee);
 			playButton.x = 10;
-			playButton.y = 50;
+			playButton.y = 60;
 			this.addChild(playButton);
 			playButton.addEventListener(MouseEvent.CLICK, onPlayClick, false, 0, true);
 
 			var stopButton:SimpleButton = new SimpleButton("Stop", 0xeeeeee);
 			stopButton.x = 70;
-			stopButton.y = 10;
+			stopButton.y = 20;
 			this.addChild(stopButton);
 			stopButton.addEventListener(MouseEvent.CLICK, onStopClick, false, 0, true);
 		}

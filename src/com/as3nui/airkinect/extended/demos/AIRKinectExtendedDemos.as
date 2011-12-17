@@ -35,7 +35,7 @@ package com.as3nui.airkinect.extended.demos {
 	[SWF(width='1024', height='768', backgroundColor='#ffffff', frameRate='30')]
 	public class AIRKinectExtendedDemos extends Sprite {
 
-		private var _devMode:Boolean = true;
+		private var _devMode:Boolean = false;
 		private var _currentDemoIndex:int;
 
 		private var _demos:Vector.<Class>;
@@ -95,15 +95,15 @@ package com.as3nui.airkinect.extended.demos {
 		private function onKeyUp(event:KeyboardEvent):void {
 			if(event.keyCode != Keyboard.RIGHT && event.keyCode != Keyboard.LEFT && (event.keyCode < 48 || event.keyCode >57)) return;
 
-			trace(event.keyCode);
 			if(event.keyCode == Keyboard.RIGHT){
 				_currentDemoIndex++;
 			}else if(event.keyCode == Keyboard.LEFT){
 				_currentDemoIndex--;
 			//Number Keys
-			}else if(event.keyCode >= 48 <= 57){
+			}else if(event.keyCode >= 48 && event.keyCode <= 57){
+
 				_currentDemoIndex = event.keyCode - 48;
-				if(_currentDemoIndex = 0) _currentDemoIndex = 10;
+				if(_currentDemoIndex == 0) _currentDemoIndex = 10;
 				_currentDemoIndex--;
 				if(event.shiftKey) _currentDemoIndex += 10;
 			}
@@ -138,7 +138,7 @@ package com.as3nui.airkinect.extended.demos {
 //			this.addChild(new NestedSimulatorHelperDemo());
 
 			// Pointcloud Demo
-//			this.addChild(new PointCloudHelperDemo());
+			this.addChild(new PointCloudHelperDemo());
 		}
 
 		private function loadNextDemo():void {
