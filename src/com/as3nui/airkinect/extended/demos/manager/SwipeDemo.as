@@ -12,9 +12,10 @@ package com.as3nui.airkinect.extended.demos.manager {
 	import com.as3nui.airkinect.extended.manager.regions.Region;
 	import com.as3nui.airkinect.extended.manager.regions.RegionPlanes;
 	import com.as3nui.airkinect.extended.manager.regions.TrackedRegion;
-	import com.as3nui.airkinect.extended.manager.skeleton.Skeleton;
-	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
-	import com.as3nui.nativeExtensions.kinect.data.SkeletonPosition;
+	import com.as3nui.airkinect.extended.manager.skeleton.ExtendedSkeleton;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeletonJoint;
+	import com.as3nui.nativeExtensions.kinect.settings.AIRKinectFlags;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeleton;
 
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
@@ -28,7 +29,7 @@ package com.as3nui.airkinect.extended.demos.manager {
 		private var _kinectMaxDepthInFlash:uint = 200;
 		private var _skeletonsSprite:Sprite;
 		private var _regionsSprite:Sprite;
-		private var _activeSkeleton:Skeleton;
+		private var _activeSkeleton:ExtendedSkeleton;
 		private var _trackedRegion:TrackedRegion;
 		private var _rgbCamera:Bitmap;
 
@@ -112,18 +113,18 @@ package com.as3nui.airkinect.extended.demos.manager {
 			drawRegions()
 		}
 
-		private function onSkeletonAdded(skeleton:Skeleton):void {
+		private function onSkeletonAdded(skeleton:ExtendedSkeleton):void {
 			if (!_activeSkeleton) setActive(skeleton)
 		}
 
-		private function onSkeletonRemoved(skeleton:Skeleton):void {
+		private function onSkeletonRemoved(skeleton:ExtendedSkeleton):void {
 			if (_activeSkeleton == skeleton) {
 				deactivateSkeleton();
 				if (AIRKinectManager.numSkeletons() > 0) setActive(AIRKinectManager.getNextSkeleton());
 			}
 		}
 
-		private function setActive(skeleton:Skeleton):void {
+		private function setActive(skeleton:ExtendedSkeleton):void {
 			_activeSkeleton = skeleton;
 
 			//Swipe with no Region Restrictions
@@ -131,8 +132,8 @@ package com.as3nui.airkinect.extended.demos.manager {
 			//leftSwipeGesture.onGestureComplete.add(onSwipeComplete);
 
 			//Swipe with Region Restrictions
-			_trackedRegion = new TrackedRegion(_activeSkeleton, SkeletonPosition.SHOULDER_CENTER, -.1, -1, .1, 1, -4, 0);
-			var leftSwipeGesture:SwipeGesture = new SwipeGesture(skeleton, SkeletonPosition.HAND_LEFT, new <Region>[_trackedRegion], true, false, false);
+			_trackedRegion = new TrackedRegion(_activeSkeleton, AIRKinectSkeleton.SHOULDER_CENTER, -.1, -1, .1, 1, -4, 0);
+			var leftSwipeGesture:SwipeGesture = new SwipeGesture(skeleton, AIRKinectSkeleton.HAND_LEFT, new <Region>[_trackedRegion], true, false, false);
 			leftSwipeGesture.onGestureComplete.add(onSwipeComplete);
 
 			AIRKinectGestureManager.addGesture(leftSwipeGesture);
@@ -149,21 +150,21 @@ package com.as3nui.airkinect.extended.demos.manager {
 			while (_skeletonsSprite.numChildren > 0) _skeletonsSprite.removeChildAt(0);
 			if (!_activeSkeleton) return;
 
-			var element:Vector3D;
+			var joint:AIRKinectSkeletonJoint;
 			var scaler:Vector3D = new Vector3D(stage.stageWidth, stage.stageHeight, _kinectMaxDepthInFlash);
-			var elementSprite:Sprite;
+			var jointSprite:Sprite;
 
 			var color:uint;
-			for (var i:uint = 0; i < _activeSkeleton.numElements; i++) {
-				element = _activeSkeleton.getElementScaled(i, scaler);
-				elementSprite = new Sprite();
-				color = (element.z / (_kinectMaxDepthInFlash * 4)) * 255 << 16 | (1 - (element.z / (_kinectMaxDepthInFlash * 4))) * 255 << 8 | 0;
-				elementSprite.graphics.beginFill(color);
-				elementSprite.graphics.drawCircle(0, 0, 15);
-				elementSprite.x = element.x;
-				elementSprite.y = element.y;
-				elementSprite.z = element.z;
-				_skeletonsSprite.addChild(elementSprite);
+			for (var i:uint = 0; i < _activeSkeleton.numJoints; i++) {
+				joint = _activeSkeleton.getJointScaled(i, scaler);
+				jointSprite = new Sprite();
+				color = (joint.z / (_kinectMaxDepthInFlash * 4)) * 255 << 16 | (1 - (joint.z / (_kinectMaxDepthInFlash * 4))) * 255 << 8 | 0;
+				jointSprite.graphics.beginFill(color);
+				jointSprite.graphics.drawCircle(0, 0, 15);
+				jointSprite.x = joint.x;
+				jointSprite.y = joint.y;
+				jointSprite.z = joint.z;
+				_skeletonsSprite.addChild(jointSprite);
 			}
 		}
 
@@ -183,8 +184,8 @@ package com.as3nui.airkinect.extended.demos.manager {
 
 			var alpha:Number = .35;
 			if (_activeSkeleton) {
-				var leftHand:Vector3D = _activeSkeleton.getElement(SkeletonPosition.HAND_LEFT);
-				var rightHand:Vector3D = _activeSkeleton.getElement(SkeletonPosition.HAND_RIGHT);
+				var leftHand:AIRKinectSkeletonJoint = _activeSkeleton.getJoint(AIRKinectSkeleton.HAND_LEFT);
+				var rightHand:AIRKinectSkeletonJoint = _activeSkeleton.getJoint(AIRKinectSkeleton.HAND_RIGHT);
 				if (region.contains3D(leftHand) || region.contains3D(rightHand)) alpha = .75;
 				_regionsSprite.graphics.beginFill(0x0000ff, alpha);
 				_regionsSprite.graphics.drawRect(kinectRegionPlanes.back.x, kinectRegionPlanes.back.y, kinectRegionPlanes.back.width, kinectRegionPlanes.back.height);

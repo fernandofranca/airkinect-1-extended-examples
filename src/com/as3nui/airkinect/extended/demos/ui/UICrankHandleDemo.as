@@ -5,14 +5,14 @@ package com.as3nui.airkinect.extended.demos.ui {
 	import com.as3nui.airkinect.extended.ui.managers.UIManager;
 	import com.as3nui.airkinect.extended.ui.objects.Cursor;
 	import com.as3nui.nativeExtensions.kinect.AIRKinect;
-	import com.as3nui.nativeExtensions.kinect.data.SkeletonPosition;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeleton;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeletonJoint;
 	import com.as3nui.nativeExtensions.kinect.events.SkeletonFrameEvent;
 
 	import flash.display.Loader;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.geom.Vector3D;
 	import flash.net.URLRequest;
 
 	public class UICrankHandleDemo extends BaseUIDemo {
@@ -101,16 +101,16 @@ package com.as3nui.airkinect.extended.demos.ui {
 			circle.graphics.beginFill(0x00ff00);
 			circle.graphics.drawCircle(0, 0, 20);
 
-			_leftHandCursor = new Cursor("_kinect_", SkeletonPosition.HAND_LEFT, circle);
+			_leftHandCursor = new Cursor("_kinect_", AIRKinectSkeleton.HAND_LEFT, circle);
 			UIManager.addCursor(_leftHandCursor);
 			_leftHandCursor.enabled = false;
 		}
 
 		private function onSkeletonFrame(event:SkeletonFrameEvent):void {
 			if(event.skeletonFrame.numSkeletons >0){
-				var skeletonPosition:SkeletonPosition = event.skeletonFrame.getSkeletonPosition(0);
-				var leftHand:Vector3D = skeletonPosition.getElement(SkeletonPosition.HAND_RIGHT);
-				//var leftHand:Vector3D = skeletonPosition.getElement(SkeletonPosition.WRIST_LEFT);
+				var skeletonPosition:AIRKinectSkeleton = event.skeletonFrame.getSkeletonPosition(0);
+				var leftHand:AIRKinectSkeletonJoint = skeletonPosition.getJoint(AIRKinectSkeleton.HAND_RIGHT);
+				//var leftHand:AIRKinectSkeletonJoint = skeletonPosition.getJoint(SkeletonPosition.WRIST_LEFT);
 				var pad:Number = .35;
 
 				_leftHandCursor.enabled = true;

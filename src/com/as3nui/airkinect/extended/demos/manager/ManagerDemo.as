@@ -7,15 +7,13 @@
 package com.as3nui.airkinect.extended.demos.manager {
 	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.manager.AIRKinectManager;
-	import com.as3nui.airkinect.extended.manager.skeleton.Skeleton;
-	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
+	import com.as3nui.airkinect.extended.manager.skeleton.ExtendedSkeleton;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeletonJoint;
+	import com.as3nui.nativeExtensions.kinect.settings.AIRKinectFlags;
 
-	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
@@ -31,7 +29,7 @@ package com.as3nui.airkinect.extended.demos.manager {
 		private var _skeletonsSprite:Sprite;
 
 		//Current Active Skeleton
-		private var _activeSkeleton:Skeleton;
+		private var _activeSkeleton:ExtendedSkeleton;
 
 		public function ManagerDemo() {
 			_demoName = "Skeleton Manager Demo";
@@ -106,18 +104,18 @@ package com.as3nui.airkinect.extended.demos.manager {
 			drawSkeleton();
 		}
 
-		private function onSkeletonAdded(skeleton:Skeleton):void {
+		private function onSkeletonAdded(skeleton:ExtendedSkeleton):void {
 			if (!_activeSkeleton) setActive(skeleton)
 		}
 
-		private function onSkeletonRemoved(skeleton:Skeleton):void {
+		private function onSkeletonRemoved(skeleton:ExtendedSkeleton):void {
 			if (_activeSkeleton == skeleton) {
 				deactivateSkeleton();
 				if (AIRKinectManager.numSkeletons() > 0) setActive(AIRKinectManager.getNextSkeleton());
 			}
 		}
 
-		private function setActive(skeleton:Skeleton):void {
+		private function setActive(skeleton:ExtendedSkeleton):void {
 			_activeSkeleton = skeleton;
 		}
 
@@ -129,22 +127,22 @@ package com.as3nui.airkinect.extended.demos.manager {
 			while (_skeletonsSprite.numChildren > 0) _skeletonsSprite.removeChildAt(0);
 			if (!_activeSkeleton) return;
 
-			var element:Vector3D;
+			var joint:AIRKinectSkeletonJoint;
 			var scaler:Vector3D = new Vector3D(stage.stageWidth, stage.stageHeight, _kinectMaxDepthInFlash);
-			var elementSprite:Sprite;
+			var jointSprite:Sprite;
 
 			var color:uint;
 			//Skeleton Drawing
-			for (var i:uint = 0; i < _activeSkeleton.numElements; i++) {
-				element = _activeSkeleton.getElementScaled(i, scaler);
-				elementSprite = new Sprite();
-				color = (element.z / (_kinectMaxDepthInFlash * 4)) * 255 << 16 | (1 - (element.z / (_kinectMaxDepthInFlash * 4))) * 255 << 8 | 0;
-				elementSprite.graphics.beginFill(color);
-				elementSprite.graphics.drawCircle(0, 0, 15);
-				elementSprite.x = element.x;
-				elementSprite.y = element.y;
-				elementSprite.z = element.z;
-				_skeletonsSprite.addChild(elementSprite);
+			for (var i:uint = 0; i < _activeSkeleton.numJoints; i++) {
+				joint = _activeSkeleton.getJointScaled(i, scaler);
+				jointSprite = new Sprite();
+				color = (joint.z / (_kinectMaxDepthInFlash * 4)) * 255 << 16 | (1 - (joint.z / (_kinectMaxDepthInFlash * 4))) * 255 << 8 | 0;
+				jointSprite.graphics.beginFill(color);
+				jointSprite.graphics.drawCircle(0, 0, 15);
+				jointSprite.x = joint.x;
+				jointSprite.y = joint.y;
+				jointSprite.z = joint.z;
+				_skeletonsSprite.addChild(jointSprite);
 			}
 		}
 	}

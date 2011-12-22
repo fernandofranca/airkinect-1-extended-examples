@@ -16,6 +16,7 @@ package com.as3nui.airkinect.extended.demos {
 	import com.as3nui.airkinect.extended.demos.simulator.NestedSimulatorHelperDemo;
 	import com.as3nui.airkinect.extended.demos.simulator.SimulatorDemo;
 	import com.as3nui.airkinect.extended.demos.simulator.SimulatorHelperDemo;
+	import com.as3nui.airkinect.extended.demos.ui.UICrankHandleDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UIHandleDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UIHotSpotDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UIRepeatHandleDemo;
@@ -75,6 +76,7 @@ package com.as3nui.airkinect.extended.demos {
 			_demos.push(UISandboxDemo);
 			_demos.push(UIHandleDemo);
 			_demos.push(UISlideHandleDemo);
+			_demos.push(UICrankHandleDemo);
 			_demos.push(UITargetDemo);
 			_demos.push(UIHotSpotDemo);
 			_demos.push(UIRepeatHandleDemo);

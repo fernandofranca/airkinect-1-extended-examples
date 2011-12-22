@@ -7,10 +7,11 @@
 package com.as3nui.airkinect.extended.demos.simulator {
 	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.manager.AIRKinectManager;
-	import com.as3nui.airkinect.extended.manager.skeleton.Skeleton;
+	import com.as3nui.airkinect.extended.manager.skeleton.ExtendedSkeleton;
 	import com.as3nui.airkinect.extended.simulator.helpers.SkeletonSimulatorHelper;
-	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
-	import com.as3nui.nativeExtensions.kinect.data.SkeletonPosition;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeletonJoint;
+	import com.as3nui.nativeExtensions.kinect.settings.AIRKinectFlags;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeleton;
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -33,7 +34,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 		private var _historySprite:Sprite;
 
 		//Current Active Skeleton
-		private var _activeSkeleton:Skeleton;
+		private var _activeSkeleton:ExtendedSkeleton;
 
 		public function HistorySimulatorHelperDemo() {
 			_demoName = "History with SimulatorHelper";
@@ -111,18 +112,18 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			drawSkeleton();
 		}
 
-		private function onSkeletonAdded(skeleton:Skeleton):void {
+		private function onSkeletonAdded(skeleton:ExtendedSkeleton):void {
 			if (!_activeSkeleton) setActive(skeleton)
 		}
 
-		private function onSkeletonRemoved(skeleton:Skeleton):void {
+		private function onSkeletonRemoved(skeleton:ExtendedSkeleton):void {
 			if (_activeSkeleton == skeleton) {
 				deactivateSkeleton();
 				if (AIRKinectManager.numSkeletons() > 0) setActive(AIRKinectManager.getNextSkeleton());
 			}
 		}
 
-		private function setActive(skeleton:Skeleton):void {
+		private function setActive(skeleton:ExtendedSkeleton):void {
 			_activeSkeleton = skeleton;
 		}
 
@@ -135,37 +136,37 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			_historySprite.graphics.clear();
 			if (!_activeSkeleton) return;
 
-			var element:Vector3D;
+			var joint:AIRKinectSkeletonJoint;
 			var scaler:Vector3D = new Vector3D(stage.stageWidth, stage.stageHeight, _kinectMaxDepthInFlash);
-			var elementSprite:Sprite;
+			var jointSprite:Sprite;
 
 			var color:uint;
-			for (var i:uint = 0; i < _activeSkeleton.numElements; i++) {
-				element = _activeSkeleton.getElementScaled(i, scaler);
-				elementSprite = new Sprite();
-				color = (element.z / (_kinectMaxDepthInFlash * 4)) * 255 << 16 | (1 - (element.z / (_kinectMaxDepthInFlash * 4))) * 255 << 8 | 0;
-				elementSprite.graphics.beginFill(color);
-				elementSprite.graphics.drawCircle(0, 0, 15);
-				elementSprite.x = element.x;
-				elementSprite.y = element.y;
-				elementSprite.z = element.z;
-				_skeletonsSprite.addChild(elementSprite);
+			for (var i:uint = 0; i < _activeSkeleton.numJoints; i++) {
+				joint = _activeSkeleton.getJointScaled(i, scaler);
+				jointSprite = new Sprite();
+				color = (joint.z / (_kinectMaxDepthInFlash * 4)) * 255 << 16 | (1 - (joint.z / (_kinectMaxDepthInFlash * 4))) * 255 << 8 | 0;
+				jointSprite.graphics.beginFill(color);
+				jointSprite.graphics.drawCircle(0, 0, 15);
+				jointSprite.x = joint.x;
+				jointSprite.y = joint.y;
+				jointSprite.z = joint.z;
+				_skeletonsSprite.addChild(jointSprite);
 			}
 
 			//History Drawing
-			var elementsToTrace:Vector.<uint> = new <uint>[SkeletonPosition.HAND_RIGHT, SkeletonPosition.HAND_LEFT];
+			var jointsToTrace:Vector.<uint> = new <uint>[AIRKinectSkeleton.HAND_RIGHT, AIRKinectSkeleton.HAND_LEFT];
 			for (i = 0; i < _activeSkeleton.skeletonPositionsHistory.length; i++) {
-				for each(var elementID:uint in elementsToTrace) {
-					element = _activeSkeleton.getPositionInHistory(elementID, i);
-					element.x *= scaler.x;
-					element.y *= scaler.y;
-					element.z *= scaler.z;
+				for each(var jointID:uint in jointsToTrace) {
+					joint = _activeSkeleton.getPositionInHistory(jointID, i);
+					joint.x *= scaler.x;
+					joint.y *= scaler.y;
+					joint.z *= scaler.z;
 					var timeRatio:Number = Math.abs(1 - (i / _activeSkeleton.skeletonPositionsHistory.length));
 					_historySprite.graphics.beginFill(0xff0000, timeRatio / 2);
-					_historySprite.graphics.drawCircle(element.x, element.y, timeRatio * 15);
+					_historySprite.graphics.drawCircle(joint.x, joint.y, timeRatio * 15);
 
 					//Maps 3d Position into 2d Space
-//					var convertedPosition:Point = _skeletonsSprite.local3DToGlobal(new Vector3D(element.x,  element.y,  element.z));
+//					var convertedPosition:Point = _skeletonsSprite.local3DToGlobal(new Vector3D(joint.x,  joint.y,  joint.z));
 //					_historySprite.graphics.drawCircle(convertedPosition.x,  convertedPosition.y,  timeRatio * 15);
 				}
 			}

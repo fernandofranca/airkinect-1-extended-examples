@@ -10,12 +10,12 @@ package com.as3nui.airkinect.extended.demos.ui {
 	import com.as3nui.airkinect.extended.ui.managers.UIManager;
 	import com.as3nui.airkinect.extended.ui.objects.Cursor;
 	import com.as3nui.nativeExtensions.kinect.AIRKinect;
-	import com.as3nui.nativeExtensions.kinect.data.SkeletonPosition;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeleton;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeletonJoint;
 	import com.as3nui.nativeExtensions.kinect.events.SkeletonFrameEvent;
 
 	import flash.display.Shape;
 	import flash.display.Sprite;
-	import flash.geom.Vector3D;
 	import flash.text.TextField;
 
 	public class UISandboxDemo extends BaseUIDemo {
@@ -121,7 +121,7 @@ package com.as3nui.airkinect.extended.demos.ui {
 			circle.graphics.beginFill(0x00ff00);
 			circle.graphics.drawCircle(0, 0, 20);
 
-			_leftHandCursor = new Cursor("_kinect_", SkeletonPosition.HAND_LEFT, circle);
+			_leftHandCursor = new Cursor("_kinect_", AIRKinectSkeleton.HAND_LEFT, circle);
 			UIManager.addCursor(_leftHandCursor);
 		}
 
@@ -139,11 +139,11 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 		private function onSkeletonFrame(event:SkeletonFrameEvent):void {
 			if(event.skeletonFrame.numSkeletons >0){
-				var skeletonPosition:SkeletonPosition = event.skeletonFrame.getSkeletonPosition(0);
+				var skeletonPosition:AIRKinectSkeleton = event.skeletonFrame.getSkeletonPosition(0);
 
 
-				//var leftHand:Vector3D = skeletonPosition.getElement(SkeletonPosition.HAND_LEFT);
-				var leftHand:Vector3D = skeletonPosition.getElement(SkeletonPosition.WRIST_LEFT);
+				//var leftHand:AIRKinectSkeletonJoint = skeletonPosition.getJoint(SkeletonPosition.HAND_LEFT);
+				var leftHand:AIRKinectSkeletonJoint = skeletonPosition.getJoint(AIRKinectSkeleton.WRIST_LEFT);
 				var pad:Number = .35;
 
 				_leftHandCursor.enabled = true;

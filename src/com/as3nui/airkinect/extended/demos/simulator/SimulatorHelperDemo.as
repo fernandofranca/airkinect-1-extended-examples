@@ -8,9 +8,10 @@ package com.as3nui.airkinect.extended.demos.simulator {
 	import com.as3nui.airkinect.extended.demos.core.BaseDemo;
 	import com.as3nui.airkinect.extended.simulator.helpers.SkeletonSimulatorHelper;
 	import com.as3nui.nativeExtensions.kinect.AIRKinect;
-	import com.as3nui.nativeExtensions.kinect.data.AIRKinectFlags;
-	import com.as3nui.nativeExtensions.kinect.data.SkeletonFrame;
-	import com.as3nui.nativeExtensions.kinect.data.SkeletonPosition;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeletonJoint;
+	import com.as3nui.nativeExtensions.kinect.settings.AIRKinectFlags;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeletonFrame;
+	import com.as3nui.nativeExtensions.kinect.data.AIRKinectSkeleton;
 	import com.as3nui.nativeExtensions.kinect.events.CameraFrameEvent;
 	import com.as3nui.nativeExtensions.kinect.events.SkeletonFrameEvent;
 
@@ -27,8 +28,8 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 		private var _rgbCamera:Bitmap;
 		private var _skeletonsSprite:Sprite;
-		private var _currentSkeletons:Vector.<SkeletonPosition>;
-		private var _currentSimulatedSkeletons:Vector.<SkeletonPosition>;
+		private var _currentSkeletons:Vector.<AIRKinectSkeleton>;
+		private var _currentSimulatedSkeletons:Vector.<AIRKinectSkeleton>;
 
 		public function SimulatorHelperDemo() {
 			_demoName = "Basic Simulator Helper";
@@ -86,8 +87,8 @@ package com.as3nui.airkinect.extended.demos.simulator {
 		}
 
 		private function onSkeletonFrame(e:SkeletonFrameEvent):void {
-			_currentSkeletons = new <SkeletonPosition>[];
-			var skeletonFrame:SkeletonFrame = e.skeletonFrame;
+			_currentSkeletons = new <AIRKinectSkeleton>[];
+			var skeletonFrame:AIRKinectSkeletonFrame = e.skeletonFrame;
 			if (skeletonFrame.numSkeletons > 0) {
 				for (var j:uint = 0; j < skeletonFrame.numSkeletons; j++) {
 					_currentSkeletons.push(skeletonFrame.getSkeletonPosition(j));
@@ -95,8 +96,8 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			}
 		}
 
-		private function onSimulatedSkeletonFrame(skeletonFrame:SkeletonFrame):void {
-			_currentSimulatedSkeletons = new <SkeletonPosition>[];
+		private function onSimulatedSkeletonFrame(skeletonFrame:AIRKinectSkeletonFrame):void {
+			_currentSimulatedSkeletons = new <AIRKinectSkeleton>[];
 			if (skeletonFrame.numSkeletons > 0) {
 				for (var j:uint = 0; j < skeletonFrame.numSkeletons; j++) {
 					_currentSimulatedSkeletons.push(skeletonFrame.getSkeletonPosition(j));
@@ -111,24 +112,24 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 		private function drawSkeletons():void {
 			while (_skeletonsSprite.numChildren > 0) _skeletonsSprite.removeChildAt(0);
-			var allSkeletons:Vector.<SkeletonPosition> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
-			var element:Vector3D;
+			var allSkeletons:Vector.<AIRKinectSkeleton> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
+			var joint:AIRKinectSkeletonJoint;
 			var scaler:Vector3D = new Vector3D(stage.stageWidth, stage.stageHeight, KinectMaxDepthInFlash);
-			var elementSprite:Sprite;
+			var jointSprite:Sprite;
 
 			var color:uint;
-			for each(var skeleton:SkeletonPosition in allSkeletons) {
-				for (var i:uint = 0; i < skeleton.numElements; i++) {
-					element = skeleton.getElementScaled(i, scaler);
+			for each(var skeleton:AIRKinectSkeleton in allSkeletons) {
+				for (var i:uint = 0; i < skeleton.numJoints; i++) {
+					joint = skeleton.getJointScaled(i, scaler);
 
-					elementSprite = new Sprite();
-					color = (element.z / (KinectMaxDepthInFlash * 4)) * 255 << 16 | (1 - (element.z / (KinectMaxDepthInFlash * 4))) * 255 << 8 | 0;
-					elementSprite.graphics.beginFill(color);
-					elementSprite.graphics.drawCircle(0, 0, 15);
-					elementSprite.x = element.x;
-					elementSprite.y = element.y;
-					elementSprite.z = element.z;
-					_skeletonsSprite.addChild(elementSprite);
+					jointSprite = new Sprite();
+					color = (joint.z / (KinectMaxDepthInFlash * 4)) * 255 << 16 | (1 - (joint.z / (KinectMaxDepthInFlash * 4))) * 255 << 8 | 0;
+					jointSprite.graphics.beginFill(color);
+					jointSprite.graphics.drawCircle(0, 0, 15);
+					jointSprite.x = joint.x;
+					jointSprite.y = joint.y;
+					jointSprite.z = joint.z;
+					_skeletonsSprite.addChild(jointSprite);
 				}
 			}
 		}
