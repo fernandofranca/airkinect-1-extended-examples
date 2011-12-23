@@ -33,6 +33,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 		public function SimulatorHelperDemo() {
 			_demoName = "Basic Simulator Helper";
+			_currentSkeletons = new <AIRKinectSkeleton>[];
 		}
 
 		override protected function onAddedToStage(event:Event):void {
