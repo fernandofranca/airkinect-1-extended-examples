@@ -19,6 +19,7 @@ package com.as3nui.airkinect.extended.demos {
 	import com.as3nui.airkinect.extended.demos.ui.UICrankHandleDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UIHandleDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UIHotSpotDemo;
+	import com.as3nui.airkinect.extended.demos.ui.UIPushHandleDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UIRepeatHandleDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UISandboxDemo;
 	import com.as3nui.airkinect.extended.demos.ui.UISlideHandleDemo;
@@ -36,7 +37,7 @@ package com.as3nui.airkinect.extended.demos {
 	[SWF(width='1024', height='768', backgroundColor='#ffffff', frameRate='30')]
 	public class AIRKinectExtendedDemos extends Sprite {
 
-		private var _devMode:Boolean = false;
+		private var _devMode:Boolean = true;
 		private var _currentDemoIndex:int;
 
 		private var _demos:Vector.<Class>;
@@ -129,6 +130,7 @@ package com.as3nui.airkinect.extended.demos {
 //			this.addChild(new UISlideHandleDemo());
 //			this.addChild(new UICrankHandleDemo());
 //			this.addChild(new UITargetDemo());
+			this.addChild(new UIPushHandleDemo());
 //			this.addChild(new UIHotSpotDemo());
 //			this.addChild(new UIRepeatHandleDemo());
 
@@ -140,7 +142,7 @@ package com.as3nui.airkinect.extended.demos {
 //			this.addChild(new NestedSimulatorHelperDemo());
 
 			// Pointcloud Demo
-			this.addChild(new PointCloudHelperDemo());
+//			this.addChild(new PointCloudHelperDemo());
 		}
 
 		private function loadNextDemo():void {
