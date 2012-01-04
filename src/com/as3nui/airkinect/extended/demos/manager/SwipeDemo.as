@@ -128,7 +128,7 @@ package com.as3nui.airkinect.extended.demos.manager {
 			_activeSkeleton = skeleton;
 
 			//Swipe with no Region Restrictions
-			//var leftSwipeGesture:SwipeGesture = new SwipeGesture(skeleton, SkeletonPosition.HAND_LEFT, null, true, false, false);
+			//var leftSwipeGesture:SwipeGesture = new SwipeGesture(skeleton, AIRKinectSkeleton.HAND_LEFT, null, true, false, false);
 			//leftSwipeGesture.onGestureComplete.add(onSwipeComplete);
 
 			//Swipe with Region Restrictions

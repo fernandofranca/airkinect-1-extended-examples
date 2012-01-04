@@ -92,7 +92,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			var skeletonFrame:AIRKinectSkeletonFrame = e.skeletonFrame;
 			if (skeletonFrame.numSkeletons > 0) {
 				for (var j:uint = 0; j < skeletonFrame.numSkeletons; j++) {
-					_currentSkeletons.push(skeletonFrame.getSkeletonPosition(j));
+					_currentSkeletons.push(skeletonFrame.getSkeleton(j));
 				}
 			}
 		}
@@ -101,7 +101,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			_currentSimulatedSkeletons = new <AIRKinectSkeleton>[];
 			if (skeletonFrame.numSkeletons > 0) {
 				for (var j:uint = 0; j < skeletonFrame.numSkeletons; j++) {
-					_currentSimulatedSkeletons.push(skeletonFrame.getSkeletonPosition(j));
+					_currentSimulatedSkeletons.push(skeletonFrame.getSkeleton(j));
 				}
 			}
 		}

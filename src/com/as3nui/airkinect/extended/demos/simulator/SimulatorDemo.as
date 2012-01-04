@@ -31,15 +31,15 @@ package com.as3nui.airkinect.extended.demos.simulator {
 	import flash.utils.ByteArray;
 
 	public class SimulatorDemo extends BaseDemo {
-		private const KinectMaxDepthInFlash:Number = 200;
+		protected const KinectMaxDepthInFlash:Number = 200;
 
 
-		private var _rgbCamera:Bitmap;
-		private var _skeletonsSprite:Sprite;
-		private var _currentSkeletons:Vector.<AIRKinectSkeleton>;
-		private var _currentSimulatedSkeletons:Vector.<AIRKinectSkeleton>;
-		private var _skeletonRecorder:SkeletonRecorder;
-		private var _skeletonPlayer:SkeletonPlayer;
+		protected var _rgbCamera:Bitmap;
+		protected var _skeletonsSprite:Sprite;
+		protected var _currentSkeletons:Vector.<AIRKinectSkeleton>;
+		protected var _currentSimulatedSkeletons:Vector.<AIRKinectSkeleton>;
+		protected var _skeletonRecorder:SkeletonRecorder;
+		protected var _skeletonPlayer:SkeletonPlayer;
 
 		public function SimulatorDemo() {
 			_demoName = "Basic Manual Simulator";
@@ -102,32 +102,32 @@ package com.as3nui.airkinect.extended.demos.simulator {
 
 		}
 
-		private function onSkeletonFrame(e:SkeletonFrameEvent):void {
+		protected function onSkeletonFrame(e:SkeletonFrameEvent):void {
 			_currentSkeletons = new <AIRKinectSkeleton>[];
 			var skeletonFrame:AIRKinectSkeletonFrame = e.skeletonFrame;
 			if (skeletonFrame.numSkeletons > 0) {
 				for (var j:uint = 0; j < skeletonFrame.numSkeletons; j++) {
-					_currentSkeletons.push(skeletonFrame.getSkeletonPosition(j));
+					_currentSkeletons.push(skeletonFrame.getSkeleton(j));
 				}
 			}
 		}
 
-		private function onSimulatedSkeletonFrame(e:SkeletonFrameEvent):void {
+		protected function onSimulatedSkeletonFrame(e:SkeletonFrameEvent):void {
 			_currentSimulatedSkeletons = new <AIRKinectSkeleton>[];
 			var skeletonFrame:AIRKinectSkeletonFrame = e.skeletonFrame;
 			if (skeletonFrame.numSkeletons > 0) {
 				for (var j:uint = 0; j < skeletonFrame.numSkeletons; j++) {
-					_currentSimulatedSkeletons.push(skeletonFrame.getSkeletonPosition(j));
+					_currentSimulatedSkeletons.push(skeletonFrame.getSkeleton(j));
 				}
 			}
 		}
 
 		//Enterframe
-		private function onEnterFrame(event:Event):void {
+		protected function onEnterFrame(event:Event):void {
 			drawSkeletons();
 		}
 
-		private function createUI():void {
+		protected function createUI():void {
 			var recordButton:SimpleButton = new SimpleButton("Record", 0xeeeeee);
 			recordButton.x = 10;
 			recordButton.y = 20;
@@ -147,12 +147,12 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			stopButton.addEventListener(MouseEvent.CLICK, onStopClick, false, 0, true);
 		}
 
-		private function onRecordClick(event:MouseEvent):void {
+		protected function onRecordClick(event:MouseEvent):void {
 			trace("recording");
 			_skeletonRecorder.record();
 		}
 
-		private function onStopClick(event:MouseEvent):void {
+		protected function onStopClick(event:MouseEvent):void {
 			if (!_skeletonRecorder.recording) return;
 
 			trace("Stopped");
@@ -167,26 +167,26 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			fr.save(ba, "skeletonRecording.xml");
 		}
 
-		private function onSaveSuccess(e:Event):void {
+		protected function onSaveSuccess(e:Event):void {
 
 		}
 
-		private function onSaveCancel(e:Event):void {
+		protected function onSaveCancel(e:Event):void {
 		}
 
 
-		private function onPlayClick(event:MouseEvent):void {
+		protected function onPlayClick(event:MouseEvent):void {
 			loadXML();
 		}
 
-		private function loadXML():void {
+		protected function loadXML():void {
 			var txtFilter:FileFilter = new FileFilter("XML", "*.xml");
 			var file:File = new File();
 			file.addEventListener(Event.SELECT, onXMLFileSelected);
 			file.browseForOpen("Please select a file...", [txtFilter]);
 		}
 
-		private function onXMLFileSelected(event:Event):void {
+		protected function onXMLFileSelected(event:Event):void {
 			var fileStream:FileStream = new FileStream();
 			try {
 				fileStream.open(event.target as File, FileMode.READ);
@@ -198,7 +198,7 @@ package com.as3nui.airkinect.extended.demos.simulator {
 			}
 		}
 
-		private function drawSkeletons():void {
+		protected function drawSkeletons():void {
 			while (_skeletonsSprite.numChildren > 0) _skeletonsSprite.removeChildAt(0);
 
 			var allSkeletons:Vector.<AIRKinectSkeleton> = _currentSimulatedSkeletons ? _currentSkeletons.concat(_currentSimulatedSkeletons) : _currentSkeletons;
@@ -230,9 +230,9 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 
 class SimpleButton extends Sprite {
-	private var _label:String;
-	private var _color:uint;
-	private var _text:TextField;
+	protected var _label:String;
+	protected var _color:uint;
+	protected var _text:TextField;
 
 	public function SimpleButton(label:String, color:uint):void {
 		this.mouseChildren = false;
@@ -243,7 +243,7 @@ class SimpleButton extends Sprite {
 		draw();
 	}
 
-	private function draw():void {
+	protected function draw():void {
 		if (_text) {
 			if (this.contains(_text))this.removeChild(_text);
 			_text = null;

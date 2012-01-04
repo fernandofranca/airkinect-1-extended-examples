@@ -79,9 +79,9 @@ package com.as3nui.airkinect.extended.demos.ui {
 
 		private function onSkeletonFrame(event:SkeletonFrameEvent):void {
 			if (event.skeletonFrame.numSkeletons > 0) {
-				var skeletonPosition:AIRKinectSkeleton = event.skeletonFrame.getSkeletonPosition(0);
-				//var leftHand:AIRKinectSkeletonJoint = skeletonPosition.getJoint(SkeletonPosition.HAND_LEFT);
-				var leftHand:AIRKinectSkeletonJoint = skeletonPosition.getJoint(AIRKinectSkeleton.WRIST_LEFT);
+				var skeleton:AIRKinectSkeleton = event.skeletonFrame.getSkeleton(0);
+				//var leftHand:AIRKinectSkeletonJoint = skeleton.getJoint(AIRKinectSkeleton.HAND_LEFT);
+				var leftHand:AIRKinectSkeletonJoint = skeleton.getJoint(AIRKinectSkeleton.WRIST_LEFT);
 				var pad:Number = .35;
 
 				_leftHandCursor.enabled = true;

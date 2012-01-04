@@ -153,13 +153,13 @@ package com.as3nui.airkinect.extended.demos.manager {
 
 			//History Drawing
 			var jointsToTrace:Vector.<uint> = new <uint>[AIRKinectSkeleton.HAND_RIGHT, AIRKinectSkeleton.HAND_LEFT];
-			for (i = 0; i< _activeSkeleton.skeletonPositionsHistory.length;i++){
+			for (i = 0; i< _activeSkeleton.skeletonHistory.length;i++){
 				for each(var jointID:uint in jointsToTrace){
 					joint = _activeSkeleton.getPositionInHistory(jointID,i);
 					joint.x *= scaler.x;
 					joint.y *= scaler.y;
 					joint.z *= scaler.z;
-					var timeRatio:Number = Math.abs(1-(i/_activeSkeleton.skeletonPositionsHistory.length));
+					var timeRatio:Number = Math.abs(1-(i/_activeSkeleton.skeletonHistory.length));
 					_historySprite.graphics.beginFill(0xff0000, timeRatio/2);
 					_historySprite.graphics.drawCircle(joint.x,  joint.y,  timeRatio * 15);
 
